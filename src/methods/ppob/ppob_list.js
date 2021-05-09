@@ -1,6 +1,7 @@
 const PpobRepository = require('../../repositories/ppob')
 const Helpers = require('../../utils/helpers')
 const { Op } = require('sequelize')
+const Transformer = require('../../transformers/ppob/ppob_list')
 
 const setOffset = (page, limit) => {
     return Helpers.offsetPagination(page, limit)
@@ -26,14 +27,16 @@ module.exports = getPpobList = async (req, res) => {
         const mergedWheres = { [Op.and]: wheres }
         const orderBy  = [['selling_price', 'asc']]
 
-        const products = await PpobRepository.findAndCountAll(mergedWheres, offset, Number(limit), orderBy)
+        let products = await PpobRepository.findAndCountAll(mergedWheres, offset, Number(limit), orderBy)
+        products = Helpers.parseDataObject(products.rows)
         const metaSummary = {
             page: Number(page),
             limit: Number(limit),
             total_data: products.count,
             total_page: Math.ceil(products.count / limit)
         }
-        const payload = Helpers.parseDataObject(products.rows)
+
+        const payload = Transformer.transform(products)
 
         return res.success({ payload, meta: metaSummary })
     } catch (error) {

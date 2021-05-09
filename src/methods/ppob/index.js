@@ -1,4 +1,4 @@
 module.exports ={
-    getPpobList: require('./getPpobList'),
-    insertPpobProducts: require('./insertPpobProducts')
+    getPpobList: require('./ppob_list'),
+    insertPpobProducts: require('./insert_ppob')
 } 
