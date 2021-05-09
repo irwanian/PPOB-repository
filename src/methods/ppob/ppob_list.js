@@ -28,7 +28,7 @@ module.exports = getPpobList = async (req, res) => {
         const orderBy  = [['selling_price', 'asc']]
 
         let products = await PpobRepository.findAndCountAll(mergedWheres, offset, Number(limit), orderBy)
-        products = Helpers.parseDataObject(products.rows)
+        products.rows = Helpers.parseDataObject(products.rows)
         const metaSummary = {
             page: Number(page),
             limit: Number(limit),
@@ -36,7 +36,7 @@ module.exports = getPpobList = async (req, res) => {
             total_page: Math.ceil(products.count / limit)
         }
 
-        const payload = Transformer.transform(products)
+        const payload = Transformer.transform(products.rows)
 
         return res.success({ payload, meta: metaSummary })
     } catch (error) {
