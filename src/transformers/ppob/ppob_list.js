@@ -5,7 +5,6 @@ module.exports = {
                 return {
                     id: payload.id,
                     name: payload.name,
-                    code: payload.code,
                     provider: payload.provider,
                     category: payload.category,
                     denom: payload.denom,

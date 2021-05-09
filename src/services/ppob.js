@@ -28,11 +28,22 @@ const setProviderName = (code) => {
     return provider
 }
 
+const setVendorCode = vendor => {
+    let vencorCode
+    
+    if (vendor.toLowerCase() === 'narindo') {
+        vencorCode = 'NR'
+    }
 
-const mapPpobProducts = products => {
+    return vendorCode
+}
+
+
+const mapPpobProducts = (products, vendor) => {
     return products.map(product => {
         const purchase_price = Number(product['Price'].replace(/,/gi, ''))
         const selling_price = purchase_price + 500
+        const vendorCode = setVendorCode(vendor)
         let category
 
         if (product['Category'] && (product['Category'].toLowerCase().includes('reguler') || product['Category'].toLowerCase().includes('regular'))) {
@@ -48,7 +59,7 @@ const mapPpobProducts = products => {
 
 
         return {
-            code: `NR-${product['Product Code']}`,
+            code: `${vendorCode}-${product['Product Code']}`,
             denom: product['Denomination'] ? product['Denomination'].replace(/,/gi, '.') : product['Nominal'].replace(/,/gi, '.'),
             name: product['Product Name'],
             description: product['Description'],
@@ -62,9 +73,9 @@ const mapPpobProducts = products => {
 }
 
 
-const insertProducts = async (products) => {
+const insertProducts = async (products, vendor) => {
     try {
-        const mappedProducts = mapPpobProducts(products)
+        const mappedProducts = mapPpobProducts(products, vendor)
 
         return await PpobRepository.bulkInsert(mappedProducts)
     } catch (error) {

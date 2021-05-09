@@ -3,9 +3,9 @@ const Helpers = require('../../utils/helpers')
 
 module.exports = insertPpobProducts = async (req, res) => {
     try {
-        const { data } = req.body
+        const { data, vendor } = req.body
 
-        const productinserted = await PpobProductService.insertProducts(data)
+        const productinserted = await PpobProductService.insertProducts(data, vendor)
 
         const payload = Helpers.parseDataObject(productinserted)
 
