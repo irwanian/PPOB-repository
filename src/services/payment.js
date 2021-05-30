@@ -186,9 +186,12 @@ const updateSettledPayment = async (order_id, dbTransaction) => {
 const handleMidtransNotification = async (params) => {
     const dbTransaction = await Models.sequelize.transaction()
     const { signature_key, status_code, gross_amount, order_id, transaction_status } = params
+    console.log(signature_key === getMidtransSignatureKey(params), getMidtransSignatureKey(params))
     if (signature_key === getMidtransSignatureKey(params)) {
         if (status_code === '200' && transaction_status === 'settlement') {
            return await updateSettledPayment(order_id, dbTransaction)
+        } else {
+            return 'pending'
         }
     }
 }
