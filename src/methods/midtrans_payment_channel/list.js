@@ -28,18 +28,12 @@ module.exports = getMidtransPaymentChannelList = async (req, res) => {
         const mergedWheres = { [Op.and]: wheres }
         const orderBy  = [['id', 'asc']]
 
-        let products = await MidtransPaymentChannelRepository.findAndCountAll(mergedWheres, offset, Number(limit), orderBy)
-        products.rows = Helpers.parseDataObject(products.rows)
-        const metaSummary = {
-            page: Number(page),
-            limit: Number(limit),
-            total_data: products.count,
-            total_page: Math.ceil(products.count / limit)
-        }
+        let products = await MidtransPaymentChannelRepository.findAll(mergedWheres, offset, Number(limit), orderBy)
+        products.rows = Helpers.parseDataObject(products)
 
-        const payload = products.rows
+        const payload = products
 
-        return res.success({ payload, meta: metaSummary })
+        return res.success({ payload })
     } catch (error) {
         console.log(error)
         return res.error(error)
