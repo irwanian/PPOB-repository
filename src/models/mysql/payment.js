@@ -54,11 +54,11 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
       hooks: {
         beforeCreate(payment, options) {
-          payment.created_at = moment().format('YYYY-MM-DD HH:MM:SS');
-          payment.updated_at = moment().format('YYYY-MM-DD HH:MM:SS');
+          payment.created_at = moment().format('YYYY-MM-DD kk:mm:ss');
+          payment.updated_at = moment().format('YYYY-MM-DD kk:mm:ss');
         },
         beforeUpdate(payment, options) {
-          payment.updated_at = moment().format('YYYY-MM-DD HH:MM:SS');
+          payment.updated_at = moment().format('YYYY-MM-DD kk:mm:ss');
         },
       },
     }

@@ -9,10 +9,11 @@ const findAndCountAll = async (where = {}, offset = 1, limit = 20, order) => {
     })
 }
 
-const findOne = async (where = {}) => {
+const findOne = async (where = {}, transaction = null) => {
     return await Models.findOne({
         where,
-        raw: true
+        raw: true,
+        transaction
     })
 }
 

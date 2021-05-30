@@ -46,11 +46,11 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
       hooks: {
         beforeCreate(midtrans_payment_channel, options) {
-          midtrans_payment_channel.created_at = moment().format('YYYY-MM-DD HH:MM:SS');
-          midtrans_payment_channel.updated_at = moment().format('YYYY-MM-DD HH:MM:SS');
+          midtrans_payment_channel.created_at = moment().format('YYYY-MM-DD kk:mm:ss');
+          midtrans_payment_channel.updated_at = moment().format('YYYY-MM-DD kk:mm:ss');
         },
         beforeUpdate(midtrans_payment_channel, options) {
-          midtrans_payment_channel.updated_at = moment().format('YYYY-MM-DD HH:MM:SS');
+          midtrans_payment_channel.updated_at = moment().format('YYYY-MM-DD kk:mm:ss');
         },
       },
     }

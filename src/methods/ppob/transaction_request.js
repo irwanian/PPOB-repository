@@ -1,6 +1,7 @@
 const PpobRepository = require('../../repositories/ppob')
 const PpobTransactionRepository = require('../../repositories/ppob_transaction')
 const Helpers = require('../../utils/helpers')
+const PpobService = require('../../services/ppob')
 
 module.exports = requestPpobTransaction = async (req, res) => {
     const { user_id, product_id, destination_number } = req.body
@@ -21,6 +22,10 @@ module.exports = requestPpobTransaction = async (req, res) => {
         }
 
         const payload = await PpobTransactionRepository.create(transactionPayload)
+
+        if (products.provider.toLowerCase() === 'pln') {
+
+        } 
         
         return res.success({ payload: {
             transaction_id: payload.id

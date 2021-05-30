@@ -3,6 +3,7 @@ const qs = require('qs')
 const crypto = require('crypto')
 const ApiDependency = require('../utils/api_dependency')
 const PpobRepository = require('../repositories/ppob')
+const { NARINDO_PASSWORD, NARINDO_USER_ID } = process.env
 
 const setProviderName = (code) => {
     let provider
@@ -89,14 +90,14 @@ const insertProducts = async (products, vendor) => {
 }
 
 const setReqId = () => {
-    return 'ppob-' + moment().format('YYYYMMDD')
+    return 'ppob-' + moment().format('YYYYMMDD') + (Math.floor(Math.random() * 10000) + 1000)
 }
 
 const setTransactionSign = (params) => {
-    const { password, reqId, msisdn, product, userId } = params
+    const { reqId, msisdn, product } = params
     const sign = crypto
-                    .createHmac('sha1')
-                    .update(reqId + msisdn + product + userId + password)
+                    .createHash('sha1')
+                    .update(reqId + msisdn + product + NARINDO_USER_ID + NARINDO_PASSWORD)
                     .digest('hex')
                     .toUpperCase()
 
@@ -110,14 +111,20 @@ const processTransaction = async (params) => {
         reqid: reqId,
         msisdn: params.destinationNumber,
         product: params.productCode,
-        userid: params.userId,
-        sign: sign,
-        mid: params.reqId
+        userid: NARINDO_USER_ID,
+        sign,
+        mid: reqId
     })
 
+    console.log(queryParams)
+
     const result = await ApiDependency.buyPpobProduct(queryParams)
+    console.log(result)
+
+    return result
 }
 
 module.exports = {
-    insertProducts
+    insertProducts,
+    processTransaction
 }

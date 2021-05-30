@@ -65,15 +65,15 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
       hooks: {
         beforeCreate(ppob_product, options) {
-          ppob_product.created_at = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:MM:SS');
-          ppob_product.updated_at = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:MM:SS');
+          ppob_product.created_at = moment().tz('Asia/Jakarta').format('YYYY-MM-DD kk:mm:ss');
+          ppob_product.updated_at = moment().tz('Asia/Jakarta').format('YYYY-MM-DD kk:mm:ss');
         },
         beforeBulkCreate(ppob_product, options) {
-          ppob_product.created_at = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:MM:SS');
-          ppob_product.updated_at = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:MM:SS');
+          ppob_product.created_at = moment().tz('Asia/Jakarta').format('YYYY-MM-DD kk:mm:ss');
+          ppob_product.updated_at = moment().tz('Asia/Jakarta').format('YYYY-MM-DD kk:mm:ss');
         },
         beforeUpdate(ppob_product, options) {
-          ppob_product.updated_at = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:MM:SS');
+          ppob_product.updated_at = moment().tz('Asia/Jakarta').format('YYYY-MM-DD kk:mm:ss');
         },
       },
     }

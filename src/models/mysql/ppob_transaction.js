@@ -60,11 +60,11 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
       hooks: {
         beforeCreate(ppob_transaction, options) {
-          ppob_transaction.created_at = moment().format('YYYY-MM-DD HH:MM:SS');
-          ppob_transaction.updated_at = moment().format('YYYY-MM-DD HH:MM:SS');
+          ppob_transaction.created_at = moment().format('YYYY-MM-DD kk:mm:ss');
+          ppob_transaction.updated_at = moment().format('YYYY-MM-DD kk:mm:ss');
         },
         beforeUpdate(ppob_transaction, options) {
-          ppob_transaction.updated_at = moment().format('YYYY-MM-DD HH:MM:SS');
+          ppob_transaction.updated_at = moment().format('YYYY-MM-DD kk:mm:ss');
         },
       },
     }

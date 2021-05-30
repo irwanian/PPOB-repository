@@ -2,9 +2,10 @@ const moment = require('moment-timezone')
 const crypto = require('crypto')
 const ApiDependency = require('../utils/api_dependency')
 const PpobTransactionRepository = require('../repositories/ppob_transaction')
+const PpobProductRepository = require('../repositories/ppob')
 const PaymentRepository = require('../repositories/payment')
 const Models = require('../models')
-const { debugPort } = require('process')
+const PpobService = require('./ppob')
 
 const getOrderId = (slug = Math.floor(Math.random() * 10000) + 1000) => {
     const [fromYearsToDate, fromHoursToSeconds] = moment().format('YYYYMMDD-hhmmss').split('-')
@@ -162,7 +163,7 @@ const chargePayment = async (payment_channel, ppob) => {
         result.data = await chargeOverTheCounter(params)
     }
 
-    const expired_at = moment().tz('Asia/Jakarta').add('24', 'hours').format('YYYY-MM-DD HH:MM:SS')
+    const expired_at = moment().tz('Asia/Jakarta').add('24', 'hours').format('YYYY-MM-DD kk:mm:ss')
     result.data.expired_at = expired_at
 
     return result
@@ -190,15 +191,29 @@ const getTransactionStatus = (status) => {
 const updatePaymentStatus = async (order_id, status, dbTransaction) => {
     const paymentUpdatePayload = {
         status,
-        expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:MM:SS')
+        expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD kk:mm:ss')
     }
 
     try {
+        let detail = {}
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
-        await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status) } , dbTransaction)
+        
+        const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
+        
+        if (status === 'settlement') {
+            const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id }, transaction)
+            const payloadPpobTransaction = {
+                msisdn: transactionData.destination_number,
+                product_code: product.code.split('-')[1]
+            }
+            const processedTransaction = await PpobService.processTransaction(payloadPpobTransaction)
+            detail = processedTransaction  
+        }
+
+        await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
         await dbTransaction.commit()
 
-        return 'success'
+        return processedTransaction
     } catch (error) {
         if (dbTransaction) {
             await dbTransaction.rollback()
@@ -217,8 +232,9 @@ const handleMidtransNotification = async (params) => {
     if (signature_key === getMidtransSignatureKey(params)) {
         if (status_code === '200' && transaction_status === 'settlement') {
               const updateResult = await updatePaymentStatus(order_id, transaction_status, dbTransaction)
+              const product = await PpobProductRepository.findOne({ id: updateResult.ppob_product_id })
               
-              if (updateResult === 'success') {
+              if (updateResult !== 'error') {
                   result.message = 'success'
               } else {
                   result.status = false
