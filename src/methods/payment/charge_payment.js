@@ -1,5 +1,4 @@
 const Models = require('../../models')
-// const Transformer = require('../../transformers/ppob/ppob_list')
 const PaymentService = require('../../services/payment')
 const MidtransPaymentChannelRepository = require('../../repositories/midtrans_payment_channel')
 const PpobProductRepository = require('../../repositories/ppob')
@@ -10,11 +9,12 @@ const PpobTransactionRepository = require('../../repositories/ppob_transaction')
 module.exports = chargePayment = async (req, res) => {
     try {
         const { body } = req
-        const [payment_channel, ppob_product, transaction] = await Promise.all([
+        const [payment_channel, transaction] = await Promise.all([
             MidtransPaymentChannelRepository.findOne({ id: body.payment_channel_id }),
-            PpobProductRepository.findOne({ id: body.product_id }),
-            PpobTransactionRepository.findOne({ id: body.transaction_id })
+            PpobTransactionRepository.findOne({ id: body.transaction_id, status: 'pending' })
         ])
+
+        const ppob_product = await PpobProductRepository.findOne({ id: transaction.ppob_product_id })
 
         if (!transaction) {
             return res.error({ message: 'Data Transaksi Tidak Ditemukan' })

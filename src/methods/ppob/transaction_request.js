@@ -16,7 +16,8 @@ module.exports = requestPpobTransaction = async (req, res) => {
             payment_id: null,
             ppob_product_id: products.id,
             purchase_price: products.purchase_price,
-            selling_price: products.selling_price
+            selling_price: products.selling_price,
+            detail: {}
         }
 
         const payload = await PpobTransactionRepository.create(transactionPayload)
