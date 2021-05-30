@@ -201,19 +201,22 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
         const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
         
         if (status === 'settlement') {
-            const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id }, transaction)
+            console.log('abus kadieu')
+            const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
             const payloadPpobTransaction = {
                 msisdn: transactionData.destination_number,
                 product_code: product.code.split('-')[1]
             }
+            console.log(payloadPpobTransaction)
             const processedTransaction = await PpobService.processTransaction(payloadPpobTransaction)
             detail = processedTransaction  
         }
-
+        
         await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
         await dbTransaction.commit()
-
+        
         return processedTransaction
+
     } catch (error) {
         if (dbTransaction) {
             await dbTransaction.rollback()
