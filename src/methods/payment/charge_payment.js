@@ -38,7 +38,7 @@ module.exports = chargePayment = async (req, res) => {
             await PpobTransactionRepository.update(body.transaction_id, { payment_id: payment.id }, dbTransaction)
             await dbTransaction.commit()
           
-            return res.success({ payload })
+            return res.success({ payload: payload.data })
         } catch (error) {
             if (dbTransaction) {
                 dbTransaction.rollback()

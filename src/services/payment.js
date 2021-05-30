@@ -31,7 +31,7 @@ const getPaymentCode = (params) => {
 }
 
 const getEwalletDeepLink = (params) => {
-    console.log({ params })
+    console.log('ewallet', { params })
     let link = null
     if (params.actions) {
         if (params.actions.length > 1) {
@@ -50,6 +50,7 @@ const mapChargeResponse = (data) => {
             order_id: data.order_id,
             nominal: data.nominal,
             payment_channel_id: data.payment_channel_id,
+            payment_channel_name: data.payment_channel_name,
             ewallet_link: getEwalletDeepLink(data),
             status: 'pending'
         }
@@ -71,7 +72,7 @@ const chargeEchannel = async (params) => {
     if (!result.status) {
         throw new Error(result.message)
     } else {
-        return mapChargeResponse({ ...result.data, nominal: params.nominal, payment_channel_id: params.payment_channel_id })
+        return mapChargeResponse({ ...result.data, nominal: params.nominal, payment_channel_id: params.payment_channel_id, payment_channel_name: params.payment_channel_name })
     }
 }
 
@@ -91,7 +92,7 @@ const chargeBankTransfer = async (params) => {
     if (!result.status) {
         throw new Error(result.message)
     } else {
-        return mapChargeResponse({ ...result.data, nominal: params.nominal, payment_channel_id: params.payment_channel_id })
+        return mapChargeResponse({ ...result.data, nominal: params.nominal, payment_channel_id: params.payment_channel_id, payment_channel_name: params.payment_channel_name })
     }
 }
 
@@ -108,7 +109,7 @@ const chargeEwallet = async (params) => {
     if (!result.status) {
         throw new Error(result.message)
     } else {
-        return mapChargeResponse({ ...result.data, nominal: params.nominal, payment_channel_id: params.payment_channel_id })
+        return mapChargeResponse({ ...result.data, nominal: params.nominal, payment_channel_id: params.payment_channel_id, payment_channel_name: params.payment_channel_name })
     }
 }
 
@@ -130,7 +131,7 @@ const chargeOverTheCounter = async (params) => {
     if (!result.status) {
         throw new Error(result.message)
     } else {
-        return mapChargeResponse({ ...result.data, nominal: params.nominal, payment_channel_id: params.payment_channel_id })
+        return mapChargeResponse({ ...result.data, nominal: params.nominal, payment_channel_id: params.payment_channel_id, payment_channel_name: params.payment_channel_name })
     }
 }
 
@@ -144,6 +145,7 @@ const chargePayment = async (payment_channel, ppob) => {
 
     const params = {
         payment_channel_id: payment_channel.id,
+        payment_channel_name: payment_type.name,
         payment_type: payment_channel.category,
         nominal: ppob.selling_price,
         product_name: ppob.name,
