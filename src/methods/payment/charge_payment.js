@@ -12,7 +12,7 @@ module.exports = chargePayment = async (req, res) => {
         const { body } = req
         const [payment_channel, ppob_product, transaction] = await Promise.all([
             MidtransPaymentChannelRepository.findOne({ id: body.payment_channel_id }),
-            PpobProductRepository.findOne({ id: body.ppob_product_id }),
+            PpobProductRepository.findOne({ id: body.product_id }),
             PpobTransactionRepository.findOne({ id: body.transaction_id })
         ])
 
@@ -32,19 +32,19 @@ module.exports = chargePayment = async (req, res) => {
             return res.error({ message: payload.message })
         }
 
-        // const dbTransaction = await Models.sequelize.transaction()
+        const dbTransaction = await Models.sequelize.transaction()
 
-        // try {
-        //     const payment = await PaymentRepository.create(payload.data, dbTransaction)
-        //     await PpobTransactionRepository.update(body.transaction_id, { payment_id: payment.id }, dbTransaction)
-        //     await dbTransaction.commit()
+        try {
+            const payment = await PaymentRepository.create(payload.data, dbTransaction)
+            await PpobTransactionRepository.update(body.transaction_id, { payment_id: payment.id }, dbTransaction)
+            await dbTransaction.commit()
           
             return res.success({ payload })
-        // } catch (error) {
-        //     if (dbTransaction) {
-        //         dbTransaction.rollback()
-        //     }
-        // }
+        } catch (error) {
+            if (dbTransaction) {
+                dbTransaction.rollback()
+            }
+        }
         
     } catch (error) {
         return res.error(error)
