@@ -31,7 +31,7 @@ const getPaymentCode = (params) => {
 }
 
 const getEwalletDeepLink = (params) => {
-    console.log('ewallet', { params })
+    console.log('ewallet', { params }, params.actions)
     let link = null
     if (params.actions) {
         if (params.actions.length > 1) {
