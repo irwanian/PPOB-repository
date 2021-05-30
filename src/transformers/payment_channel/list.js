@@ -4,8 +4,7 @@ module.exports = {
             if (payload.is_active === 1) {
                 return {
                     id: payload.id,
-                    name: payload.name,
-                    code: payload.code,
+                    name: payload.name
                 }
             }
         }) 
