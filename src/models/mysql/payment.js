@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       payment_code: {
         type: DataTypes.STRING(45),
-        allowNull: false,
+        allowNull: true,
       },
       nominal: {
         type: DataTypes.INTEGER,

@@ -34,7 +34,6 @@ module.exports = chargePayment = async (req, res) => {
         const dbTransaction = await Models.sequelize.transaction()
 
         try {
-            console.log('payload===', payload.data)
             const payment = await PaymentRepository.create(payload.data, dbTransaction)
             await PpobTransactionRepository.update(body.transaction_id, { payment_id: payment.id }, dbTransaction)
             await dbTransaction.commit()
