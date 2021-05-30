@@ -21,7 +21,9 @@ module.exports = requestPpobTransaction = async (req, res) => {
 
         const payload = await PpobTransactionRepository.create(transactionPayload)
         
-        return res.success({ payload })
+        return res.success({ payload: {
+            transaction_id: payload.id
+        } })
     } catch (error) {
         console.log(error)
         return res.error(error)
