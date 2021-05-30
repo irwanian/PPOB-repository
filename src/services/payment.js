@@ -4,6 +4,7 @@ const ApiDependency = require('../utils/api_dependency')
 const PpobTransactionRepository = require('../repositories/ppob_transaction')
 const PaymentRepository = require('../repositories/payment')
 const Models = require('../models')
+const { debugPort } = require('process')
 
 const getOrderId = (slug = Math.floor(Math.random() * 10000) + 1000) => {
     const [fromYearsToDate, fromHoursToSeconds] = moment().format('YYYYMMDD-hhmmss').split('-')
@@ -167,29 +168,37 @@ const chargePayment = async (payment_channel, ppob) => {
 
 const getMidtransSignatureKey = (params) => {
     return crypto
-            .createHmac('sha512')
+            .createHash('sha512')
             .update(params.order_id+params.status_code+params.gross_amount+process.env.MIDTRANS_SERVER_KEY)
+            .digest('hex')
 }
 
 const updateSettledPayment = async (order_id, dbTransaction) => {
     const paymentUpdatePayload = {
         status: 'settlement',
-        expired_at: null
+        expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD hh:mm:ss')
     }
-     const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
 
-    await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'success' } ,transaction)
+    try {
+        const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
+        await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'success' } , dbTransaction)
+        await dbTransaction.commit()
 
-    return 'success'
+        return 'success'
+    } catch (error) {
+        if (dbTransaction) {
+            await dbTransaction.rollback()
+            return 'error'
+        }
+    }
 }
 
 const handleMidtransNotification = async (params) => {
     const dbTransaction = await Models.sequelize.transaction()
     const { signature_key, status_code, gross_amount, order_id, transaction_status } = params
-    console.log(signature_key === getMidtransSignatureKey(params), getMidtransSignatureKey(params))
     if (signature_key === getMidtransSignatureKey(params)) {
         if (status_code === '200' && transaction_status === 'settlement') {
-           return await updateSettledPayment(order_id, dbTransaction)
+              return await updateSettledPayment(order_id, dbTransaction)
         } else {
             return 'pending'
         }

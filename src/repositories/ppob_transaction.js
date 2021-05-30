@@ -25,6 +25,7 @@ const update = async (id, data, transaction) => {
 }
 
 const updateByPaymentId = async (payment_id, data, transaction) => {
+    console.log({payment_id}, data)
     return await Models.update(data, { where: { payment_id }, transaction })
 }
 

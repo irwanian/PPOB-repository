@@ -26,7 +26,7 @@ const update = async (id, data, transaction) => {
 
 const updateByOrderId = async (order_id, data, transaction) => {
     await Models.update(data, { where: { order_id }, transaction })
-    return await findOne({ order_id })
+    return await Models.findOne({ where: { order_id }, transaction }, { raw: true })
 }
 
 module.exports = {

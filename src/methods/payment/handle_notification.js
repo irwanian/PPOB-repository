@@ -11,7 +11,7 @@ module.exports = handleNotification = async (req, res) => {
     try {
         const { body } = req
         const result = await PaymentService.handleMidtransNotification(body)
-        res.status(200).send({ payload: result })
+        res.success({ payload: result })
     } catch (error) {
         return res.error(error)
     }

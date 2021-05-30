@@ -28,7 +28,6 @@ module.exports = chargePayment = async (req, res) => {
 
         let payload = await PaymentService.chargePayment(payment_channel, ppob_product, transaction)
         if (!payload.status) {
-            console.log(payload)
             return res.error({ message: payload.message })
         }
 
