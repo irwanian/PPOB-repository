@@ -199,9 +199,7 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
         
         const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
-        console.log('diluarna', status)
         if (status.toLowerCase() === 'settlement') {
-            console.log('abus kadieu')
             const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
             const payloadPpobTransaction = {
                 msisdn: transactionData.destination_number,
@@ -235,7 +233,6 @@ const handleMidtransNotification = async (params) => {
     if (signature_key === getMidtransSignatureKey(params)) {
         if (status_code === '200' && transaction_status.toLowerCase() === 'settlement') {
               const updateResult = await updatePaymentStatus(order_id, transaction_status, dbTransaction)
-              const product = await PpobProductRepository.findOne({ id: updateResult.ppob_product_id })
               
               if (updateResult !== 'error') {
                   result.message = 'success'
