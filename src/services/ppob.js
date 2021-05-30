@@ -105,7 +105,6 @@ const setTransactionSign = (params) => {
 }
 
 const processTransaction = async (params) => {
-    console.log('masup process trx', params)
     const reqId = setReqId()
     const sign = setTransactionSign(params)
     const queryParams = qs.stringify({ 
@@ -116,8 +115,6 @@ const processTransaction = async (params) => {
         sign,
         mid: reqId
     })
-
-    console.log(queryParams)
 
     const result = await ApiDependency.buyPpobProduct(queryParams)
     console.log(result)

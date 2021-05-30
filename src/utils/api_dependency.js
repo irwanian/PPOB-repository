@@ -8,7 +8,7 @@ module.exports.buyPpobProduct = async (params) => {
         message: '',
         data: {}
     }
-    const url = process.env.NARINDO_URL
+    const url = `${process.env.NARINDO_URL}/h2h`
     
     try {
         const headers = {
