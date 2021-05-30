@@ -7,7 +7,7 @@ const setOffset = (page, limit) => {
 }
 
 module.exports = getMidtransPaymentChannelList = async (req, res) => {
-    const { id, code, category } = req.query 
+    const { id, code, category, page = 1, limit = 20 } = req.query 
     
     try {
         const wheres = []
