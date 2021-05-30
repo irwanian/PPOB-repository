@@ -37,34 +37,35 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/v1/ppob', require('./ppob'))
-// app.use('/api/v1/payment', require('./payment'))
+app.use('/api/v1/payment', require('./payment'))
 
-
-const tunnelConfig = {
-    username: SSH_USERNAME,
-    password: SSH_PASSWORD,
-    host: SSH_HOST,
-    dstHost: SSH_DST_HOST,
-    dstPort: SSH_DST_PORT
-  }
-  
-  tunnel(tunnelConfig, (error, success) => {
-      if (error) {
-          console.log('Error Connecting SSH Tunnel')
-      } else {
-          console.log('connected to DB')
+if (process.env.ENVIRONMENT === 'local') {
+    const tunnelConfig = {
+        username: SSH_USERNAME,
+        password: SSH_PASSWORD,
+        host: SSH_HOST,
+        dstHost: SSH_DST_HOST,
+        dstPort: SSH_DST_PORT
       }
-    })
+      
+      tunnel(tunnelConfig, (error, success) => {
+          if (error) {
+              console.log('Error Connecting SSH Tunnel')
+          } else {
+              console.log('connected to DB')
+          }
+        })
+}
 
-    sequelize.sync()
-    .then(() => {
-            app.listen(port, () => {
-                  console.log(`App listening on port: ${port}`)
-            })
-    })
-    .catch((err) => {
-        throw err
-    })
+sequelize.sync()
+.then(() => {
+        app.listen(port, () => {
+                console.log(`App listening on port: ${port}`)
+        })
+})
+.catch((err) => {
+    throw err
+})
 
 
 

@@ -5,7 +5,7 @@ module.exports = insertPpobProducts = async (req, res) => {
     try {
         const { data, vendor } = req.body
 
-        const productinserted = await PpobProductService.insertProducts(data, vendor)
+        const productinserted = await PpobProductService.createProducts(data, vendor)
 
         const payload = Helpers.parseDataObject(productinserted)
 

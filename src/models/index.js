@@ -16,7 +16,7 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     max: Number(DB_POOL_MAX) || 30,
     min: Number(DB_POOL_MIN) || 1
   },
-  timezone: 'Asia/Jakarta'
+  timezone: '+07:00'
 })
 
 fs
@@ -35,9 +35,7 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
-
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
 
 module.exports = db

@@ -29,14 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       payment_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
-      product_id: {
-        type: DataTypes.STRING(30),
-      },
-      denom: {
+      ppob_product_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
       },
       purchase_price: {
         type: DataTypes.INTEGER,
@@ -46,11 +42,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      detail: {
+        type: DataTypes.JSON,
+        allowNull: true
+      },
       created_at: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(30),
       },
       updated_at: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(30),
       },
     },
     {

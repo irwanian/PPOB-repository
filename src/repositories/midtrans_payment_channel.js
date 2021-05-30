@@ -1,11 +1,11 @@
-const Models = require('../models').ppob_product
+const Models = require('../models').midtrans_payment_channel
 
-const findAndCountAll = async (where = {}, offset = 1, limit = 20, order) => {
-    return await Models.findAndCountAll({
+const findAll = async (where = {}, offset = 1, limit = 20, order) => {
+    return await Models.findAll({
         where,
         limit,
         offset,
-        order
+        order,
     })
 }
 
@@ -14,10 +14,6 @@ const findOne = async (where = {}) => {
         where,
         raw: true
     })
-}
-
-const bulkInsert = async (data) => {
-    return await Models.bulkCreate(data)
 }
 
 const create = async (data) => {
@@ -32,9 +28,8 @@ const update = async (id, data) => {
 
 
 module.exports = {
-    findAndCountAll,
+    findAll,
     findOne,
-    bulkInsert,
     create,
     update
 }

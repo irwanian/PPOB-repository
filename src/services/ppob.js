@@ -1,3 +1,7 @@
+const moment = require('moment-timezone')
+const qs = require('qs')
+const crypto = require('crypto')
+const ApiDependency = require('../utils/api_dependency')
 const PpobRepository = require('../repositories/ppob')
 
 const setProviderName = (code) => {
@@ -82,6 +86,36 @@ const insertProducts = async (products, vendor) => {
         throw new Error(error.message)
     }
     
+}
+
+const setReqId = () => {
+    return 'ppob-' + moment().format('YYYYMMDD')
+}
+
+const setTransactionSign = (params) => {
+    const { password, reqId, msisdn, product, userId } = params
+    const sign = crypto
+                    .createHmac('sha1')
+                    .update(reqId + msisdn + product + userId + password)
+                    .digest('hex')
+                    .toUpperCase()
+
+    return sign
+}
+
+const processTransaction = async (params) => {
+    const reqId = setReqId()
+    const sign = setTransactionSign(params)
+    const queryParams = qs.stringify({ 
+        reqid: reqId,
+        msisdn: params.destinationNumber,
+        product: params.productCode,
+        userid: params.userId,
+        sign: sign,
+        mid: params.reqId
+    })
+
+    const result = await ApiDependency.buyPpobProduct(queryParams)
 }
 
 module.exports = {

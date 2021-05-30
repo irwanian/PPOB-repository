@@ -20,12 +20,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(25),
         allowNull: false,
       },
-      amount: {
+      payment_code: {
+        type: DataTypes.STRING(45),
+        allowNull: false,
+      },
+      nominal: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      payment_channel: {
-        type: DataTypes.STRING(70),
+      payment_channel_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       status: {
@@ -33,10 +37,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       created_at: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(30),
       },
       updated_at: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(30),
       },
     },
     {

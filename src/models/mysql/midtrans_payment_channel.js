@@ -16,19 +16,23 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      payment_channel: {
+      name: {
         type: DataTypes.STRING(70),
         allowNull: false,
       },
-      payment_type: {
+      code: {
+        type: DataTypes.STRING(70),
+        allowNull: false,
+      },
+      category: {
         type: DataTypes.STRING(70),
         allowNull: false,
       },
       created_at: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(30),
       },
       updated_at: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(30),
       },
     },
     {
