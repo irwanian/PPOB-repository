@@ -38,6 +38,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/ppob', require('./ppob'))
 app.use('/api/v1/payment', require('./payment'))
+app.use('/api/v1/payment-channel', require('./midtrans_payment_channel'))
 
 if (process.env.ENVIRONMENT === 'local') {
     const tunnelConfig = {
