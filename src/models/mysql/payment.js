@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      expired_at: {
+        type: DataTypes.STRING(30),
+        allowNull: false,
+      },
       payment_channel_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
