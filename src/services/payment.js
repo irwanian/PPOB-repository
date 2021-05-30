@@ -199,8 +199,8 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
         
         const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
-        
-        if (status === 'settlement') {
+        console.log('diluarna', status)
+        if (status.toLowerCase() === 'settlement') {
             console.log('abus kadieu')
             const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
             const payloadPpobTransaction = {
@@ -210,12 +210,12 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
             console.log(payloadPpobTransaction)
             const processedTransaction = await PpobService.processTransaction(payloadPpobTransaction)
             detail = processedTransaction  
+            await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
+            await dbTransaction.commit()
+            
+            return processedTransaction
         }
         
-        await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
-        await dbTransaction.commit()
-        
-        return processedTransaction
 
     } catch (error) {
         if (dbTransaction) {
@@ -233,7 +233,7 @@ const handleMidtransNotification = async (params) => {
     const dbTransaction = await Models.sequelize.transaction()
     const { signature_key, status_code, gross_amount, order_id, transaction_status } = params
     if (signature_key === getMidtransSignatureKey(params)) {
-        if (status_code === '200' && transaction_status === 'settlement') {
+        if (status_code === '200' && transaction_status.toLowerCase() === 'settlement') {
               const updateResult = await updatePaymentStatus(order_id, transaction_status, dbTransaction)
               const product = await PpobProductRepository.findOne({ id: updateResult.ppob_product_id })
               
