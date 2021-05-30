@@ -28,7 +28,7 @@ module.exports = getMidtransPaymentChannelList = async (req, res) => {
         const orderBy  = [['id', 'asc']]
 
         let products = await MidtransPaymentChannelRepository.findAll(mergedWheres, offset, Number(limit), orderBy)
-        products.rows = Helpers.parseDataObject(products)
+        products = Helpers.parseDataObject(products)
 
         const payload = Transformer.transform(products)
 
