@@ -178,7 +178,9 @@ const updateSettledPayment = async (order_id, dbTransaction) => {
     }
      const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
 
-     await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'success' } ,transaction)
+    await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'success' } ,transaction)
+
+    return 'success'
 }
 
 const handleMidtransNotification = async (params) => {
@@ -186,7 +188,7 @@ const handleMidtransNotification = async (params) => {
     const { signature_key, status_code, gross_amount, order_id, transaction_status } = params
     if (signature_key === getMidtransSignatureKey(params)) {
         if (status_code === '200' && transaction_status === 'settlement') {
-           await updateSettledPayment(order_id, dbTransaction)
+           return await updateSettledPayment(order_id, dbTransaction)
         }
     }
 }
