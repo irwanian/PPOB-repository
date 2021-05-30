@@ -173,15 +173,27 @@ const getMidtransSignatureKey = (params) => {
             .digest('hex')
 }
 
-const updateSettledPayment = async (order_id, dbTransaction) => {
+const getTransactionStatus = (status) => {
+    let result
+
+    if (status === 'settlement') result = 'success'
+    if (status === 'deny') result = 'failed'
+    if (status === 'cancel') result = 'cancel'
+    if (status === 'expire') result = 'expired'
+    if (status === 'failure') result = 'failed'
+
+    return result
+}
+
+const updatePaymentStatus = async (order_id, status, dbTransaction) => {
     const paymentUpdatePayload = {
-        status: 'settlement',
+        status,
         expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD hh:mm:ss')
     }
 
     try {
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
-        await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'success' } , dbTransaction)
+        await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status) } , dbTransaction)
         await dbTransaction.commit()
 
         return 'success'
@@ -202,7 +214,7 @@ const handleMidtransNotification = async (params) => {
     const { signature_key, status_code, gross_amount, order_id, transaction_status } = params
     if (signature_key === getMidtransSignatureKey(params)) {
         if (status_code === '200' && transaction_status === 'settlement') {
-              const updateResult = await updateSettledPayment(order_id, dbTransaction)
+              const updateResult = await updatePaymentStatus(order_id, transaction_status, dbTransaction)
               
               if (updateResult === 'success') {
                   result.message = 'success'
