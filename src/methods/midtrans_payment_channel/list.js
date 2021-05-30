@@ -24,6 +24,8 @@ module.exports = getMidtransPaymentChannelList = async (req, res) => {
             wheres.push({ id })
         }
 
+        wheres.push({ is_active: 1 })
+
         const mergedWheres = { [Op.and]: wheres }
         const orderBy  = [['id', 'asc']]
 

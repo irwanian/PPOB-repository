@@ -145,7 +145,7 @@ const chargePayment = async (payment_channel, ppob) => {
 
     const params = {
         payment_channel_id: payment_channel.id,
-        payment_channel_name: payment_type.name,
+        payment_channel_name: payment_channel.name,
         payment_type: payment_channel.category,
         nominal: ppob.selling_price,
         product_name: ppob.name,
@@ -162,7 +162,7 @@ const chargePayment = async (payment_channel, ppob) => {
         result.data = await chargeOverTheCounter(params)
     }
 
-    const expired_at = moment().tz('Asia/Jakarta').add('24', 'hours').format('YYYY-MM-DD hh:mm:ss')
+    const expired_at = moment().tz('Asia/Jakarta').add('24', 'hours').format('YYYY-MM-DD HH:MM:SS')
     result.data.expired_at = expired_at
 
     return result
@@ -190,7 +190,7 @@ const getTransactionStatus = (status) => {
 const updatePaymentStatus = async (order_id, status, dbTransaction) => {
     const paymentUpdatePayload = {
         status,
-        expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD hh:mm:ss')
+        expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:MM:SS')
     }
 
     try {
