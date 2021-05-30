@@ -22,6 +22,7 @@ module.exports.buyPpobProduct = async (params) => {
 
         return result
     } catch (error) {
+        console.log(error)
         result.status = false
         result.code = 500
         result.message = error.message
