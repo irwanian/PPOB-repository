@@ -157,7 +157,8 @@ const chargePayment = async (payment_channel, ppob) => {
         result.data = await chargeOverTheCounter(params)
     }
 
-    result.data.expired_at = moment().add('24', 'hours')
+    const expired_at = moment().tz('Asia/Jakarta').add('24', 'hours')
+    result.data.expired_at = `${expired_at.replace('T', ' ').split('.')[0]}}`
 
     return result
 }
