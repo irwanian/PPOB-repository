@@ -6,7 +6,7 @@ module.exports = requestPpobTransaction = async (req, res) => {
     const { user_id, product_id, destination_number } = req.body
     
     try {
-        let products = await PpobRepository.findAndCountAll({ id: product_id })
+        let products = await PpobRepository.findOne({ id: product_id })
         products = Helpers.parseDataObject(products)
 
         const transactionPayload = {
