@@ -24,10 +24,15 @@ const update = async (id, data, transaction) => {
      return await Models.update(data, { where: { id }, transaction })
 }
 
+const updateByOrderId = async (order_id, data, transaction) => {
+    await Models.update(data, { where: { order_id }, transaction })
+    return await findOne({ order_id })
+}
 
 module.exports = {
     findAll,
     findOne,
     create,
-    update
+    update,
+    updateByOrderId
 }

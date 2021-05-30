@@ -24,10 +24,14 @@ const update = async (id, data, transaction) => {
      return await Models.update(data, { where: { id }, transaction })
 }
 
+const updateByPaymentId = async (payment_id, data, transaction) => {
+    return await Models.update(data, { where: { payment_id }, transaction })
+}
 
 module.exports = {
     findAll,
     findOne,
     create,
-    update
+    update,
+    updateByPaymentId
 }

@@ -1,7 +1,9 @@
 const moment = require('moment-timezone')
 const crypto = require('crypto')
 const ApiDependency = require('../utils/api_dependency')
-
+const PpobTransactionRepository = require('../repositories/ppob_transaction')
+const PaymentRepository = require('../repositories/payment')
+const Models = require('../models')
 
 const getOrderId = (slug = Math.floor(Math.random() * 10000) + 1000) => {
     const [fromYearsToDate, fromHoursToSeconds] = moment().format('YYYYMMDD-hhmmss').split('-')
@@ -169,13 +171,22 @@ const getMidtransSignatureKey = (params) => {
             .update(params.order_id+params.status_code+params.gross_amount+process.env.MIDTRANS_SERVER_KEY)
 }
 
+const updateSettledPayment = async (order_id, dbTransaction) => {
+    const paymentUpdatePayload = {
+        status: 'settlement',
+        expired_at: null
+    }
+     const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
+
+     await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'success' } ,transaction)
+}
+
 const handleMidtransNotification = async (params) => {
+    const dbTransaction = await Models.sequelize.transaction()
     const { signature_key, status_code, gross_amount, order_id, transaction_status } = params
     if (signature_key === getMidtransSignatureKey(params)) {
         if (status_code === '200' && transaction_status === 'settlement') {
-           // update ppob transaction status & payment status
-           console.log('settlement')
-           return 'BANZAI!!!'
+           await updateSettledPayment(order_id, dbTransaction)
         }
     }
 }
