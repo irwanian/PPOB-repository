@@ -90,7 +90,7 @@ const insertProducts = async (products, vendor) => {
 }
 
 const setReqId = () => {
-    return 'ppob-' + moment().format('YYYYMMDD') + (Math.floor(Math.random() * 10000) + 1000)
+    return 'ppob-' + moment().format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
 }
 
 const setTransactionSign = (params) => {
@@ -105,11 +105,12 @@ const setTransactionSign = (params) => {
 }
 
 const processTransaction = async (params) => {
+    console.log('masup process trx', params)
     const reqId = setReqId()
     const sign = setTransactionSign(params)
     const queryParams = qs.stringify({ 
         reqid: reqId,
-        msisdn: params.destinationNumber,
+        msisdn: params.msisdn,
         product: params.productCode,
         userid: NARINDO_USER_ID,
         sign,
