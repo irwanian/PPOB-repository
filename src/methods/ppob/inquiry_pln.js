@@ -10,9 +10,12 @@ module.exports = inquiryPln = async (req, res) => {
             custid: destination_number
         })
 
-        const payload = await ApiDependency.inquiryPln(inquiryPayload)
-        
-        return res.success({ payload })
+        let payload = await ApiDependency.inquiryPln(inquiryPayload)
+        if (!payload.status) {
+            return res.error({ message: payload.message })
+        }
+
+        return res.success({ payload: payload.data })
     } catch (error) {
         console.log(error)
         return res.error(error)
