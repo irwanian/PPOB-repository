@@ -57,8 +57,6 @@ router.post('/test/transaction', (req, res) => {
             console.log('ey======', err)
             res.error(err)
         })
-    
-        return result
 })
 
 module.exports = router
