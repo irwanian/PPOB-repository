@@ -59,4 +59,32 @@ router.post('/test/transaction', (req, res) => {
         })
 })
 
+router.post('/test/inquiry', (req, res) => {
+    const { destination_number } = req.body
+    
+        const headers = {
+            headers: {
+                Accept: '*/*',
+                "Content-Type": "application/x-www-form-urlencoded",
+                Host: "h2hdev.narindo.com:9902" 
+          }
+        }
+
+        const queryParams = qs.stringify({
+            userid: NARINDO_USER_ID,
+            ptype: 'pln',
+            custid: destination_number
+        })
+    
+        axios.post('https://h2hdev.narindo.com:9902/v3/inquiry', queryParams, headers)
+        .then((data) => {
+            console.log('oy====', data)
+            res.success(data.data)
+        })
+        .catch(err => {
+            console.log('ey======', err)
+            res.error(err.response ? err.response.data.message : err.message)
+        })
+})
+
 module.exports = router
