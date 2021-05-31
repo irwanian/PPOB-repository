@@ -18,7 +18,6 @@ const setTransactionSign = (params) => {
                     .createHash('sha1')
                     .update(reqId + msisdn + product + NARINDO_USER_ID + NARINDO_PASSWORD)
                     .digest('hex')
-                    .toUpperCase()
 
     return sign
 }
@@ -37,7 +36,7 @@ router.post('/test/transaction', (req, res) => {
             product: code,
             userid: NARINDO_USER_ID,
             sign,
-            mid: reqId
+            mid: String((Math.floor(Math.random() * 10000) + 1000))
         })
 
         const headers = {
