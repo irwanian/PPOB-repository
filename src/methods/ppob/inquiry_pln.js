@@ -8,7 +8,8 @@ module.exports = inquiryPln = async (req, res) => {
     try {
         const inquiryPayload = qs.stringify({
             ptype: 'pln',
-            custid: destination_number
+            custid: destination_number,
+            userid: process.env.NARINDO_USER_ID
         })
 
         let payload = await ApiDependency.inquiryPln(inquiryPayload)
