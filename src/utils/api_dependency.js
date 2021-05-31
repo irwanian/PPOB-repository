@@ -15,7 +15,7 @@ module.exports.buyPpobProduct = async (params) => {
             headers: {
                 Accept: '*/*',
                 "Content-Type": "application/x-www-form-urlencoded",
-                Host: process.env.NARINDO_URL
+                Host: "210.210.178.14:9902"
             }
         }
 
