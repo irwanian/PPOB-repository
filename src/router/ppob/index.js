@@ -42,8 +42,11 @@ router.post('/test/transaction', (req, res) => {
         })
 
         const headers = {
+            headers: {
                 Accept: '*/*',
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Content-Type": "application/x-www-form-urlencoded",
+                Host: "https://h2hdev.narindo.com:9902" 
+          }
         }
     
         axios.post('https://h2hdev.narindo.com:9902/v3/h2h', queryParams, headers)
