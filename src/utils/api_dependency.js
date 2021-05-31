@@ -8,18 +8,20 @@ module.exports.buyPpobProduct = async (params) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_URL}/h2h`
+    const url = `${process.env.NARINDO_URL}/v3/h2h`
     
     try {
         const headers = {
             headers: {
                 Accept: '*/*',
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Content-Type": "application/x-www-form-urlencoded",
+                Host: process.env.NARINDO_URL
             }
         }
 
-        result.data = await axios.post(url, params, headers)
-
+        const narindoResponse = await axios.post(url, params, headers)
+        console.log(narindoResponse)
+        result.data = narindoResponse
         return result
     } catch (error) {
         console.log(error)

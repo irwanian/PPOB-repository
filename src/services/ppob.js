@@ -117,7 +117,7 @@ const processTransaction = async (params) => {
     })
 
     const result = await ApiDependency.buyPpobProduct(queryParams)
-    console.log(result)
+    console.log(result.data)
 
     return result
 }

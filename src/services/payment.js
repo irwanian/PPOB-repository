@@ -207,12 +207,13 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
             }
             console.log(payloadPpobTransaction)
             const processedTransaction = await PpobService.processTransaction(payloadPpobTransaction)
-            detail = processedTransaction  
-            await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
-            await dbTransaction.commit()
-            
-            return processedTransaction
+            detail = processedTransaction.data
         }
+
+        await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
+        await dbTransaction.commit()
+        
+        return processedTransaction
         
 
     } catch (error) {
