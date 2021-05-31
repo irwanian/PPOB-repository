@@ -9,7 +9,7 @@ const method = require('../../methods/ppob')
 const { NARINDO_USER_ID, NARINDO_PASSWORD } = process.env
 
 const setReqId = () => {
-    return 'ppob-' + moment().tz('Asia/Jakarta').format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
+    return 'ppob' + moment().tz('Asia/Jakarta').format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
 }
 
 const setTransactionSign = (params) => {
