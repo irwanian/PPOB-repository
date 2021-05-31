@@ -9,7 +9,7 @@ const method = require('../../methods/ppob')
 const { NARINDO_USER_ID, NARINDO_PASSWORD } = process.env
 
 const setReqId = () => {
-    return 'ppob' + moment().tz('Asia/Jakarta').format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
+    return 'ppob-' + moment().tz('Asia/Jakarta').format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
 }
 
 const setTransactionSign = (params) => {
@@ -43,15 +43,14 @@ router.post('/test/transaction', (req, res) => {
         const headers = {
             headers: {
                 Accept: '*/*',
-                "Content-Type": "application/x-www-form-urlencoded",
-                Host: "h2hdev.narindo.com:9902" 
+                "Content-Type": "application/x-www-form-urlencoded"
           }
         }
     
         axios.post('https://h2hdev.narindo.com:9902/v3/h2h', queryParams, headers)
         .then((data) => {
-            console.log('oy====', { ...data.data, queryParams, sign })
-            res.success({ payload: { ...data.data, queryParams, sign } })
+            console.log('oy====', data)
+            res.success({ payload: data.data })
         })
         .catch(err => {
             console.log('ey======', err)
@@ -65,8 +64,7 @@ router.post('/test/inquiry', (req, res) => {
         const headers = {
             headers: {
                 Accept: '*/*',
-                "Content-Type": "application/x-www-form-urlencoded",
-                Host: "h2hdev.narindo.com:9902" 
+                "Content-Type": "application/x-www-form-urlencoded"
           }
         }
 
