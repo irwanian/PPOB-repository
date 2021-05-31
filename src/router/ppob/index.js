@@ -7,28 +7,29 @@ const schema = require('../../validators/ppob')
 const method = require('../../methods/ppob')
 const { NARINDO_USER_ID, NARINDO_PASSWORD } = process.env
 
+const setReqId = () => {
+    return 'ppob-' + moment().tz('Asia/Jakarta').format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
+}
+
+const setTransactionSign = (params) => {
+    const { reqId, msisdn, product } = params
+    const sign = crypto
+                    .createHash('sha1')
+                    .update(reqId + msisdn + product + NARINDO_USER_ID + NARINDO_PASSWORD)
+                    .digest('hex')
+                    .toUpperCase()
+
+    return sign
+}
+
 router.get('/', validate(schema.getPpobList), method.getPpobList)
 router.post('/insert-multiple', method.insertPpobProducts)
 router.post('/transaction/request', method.requestPpobTransaction)
 router.post('/test/transaction', (req, res) => {
     const { destination_number, code } = req.body
-    const setReqId = () => {
-        return 'ppob-' + moment().tz('Asia/Jakarta').format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
-    }
-    
-    const setTransactionSign = (params) => {
-        const { reqId, msisdn, product } = params
-        const sign = crypto
-                        .createHash('sha1')
-                        .update(reqId + msisdn + product + NARINDO_USER_ID + NARINDO_PASSWORD)
-                        .digest('hex')
-                        .toUpperCase()
-    
-        return sign
-    }
     
         const reqId = setReqId()
-        const sign = setTransactionSign(params)
+        const sign = setTransactionSign({reqId, msisdn: destination_number, product: code})
         const queryParams = qs.stringify({ 
             reqid: reqId,
             msisdn: destination_number,
