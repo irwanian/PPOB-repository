@@ -43,8 +43,7 @@ router.post('/test/transaction', (req, res) => {
         const headers = {
             headers: {
                 Accept: '*/*',
-                "Content-Type": "application/x-www-form-urlencoded",
-                Host: "https://210.210.178.14:9902"
+                "Content-Type": "application/x-www-form-urlencoded"
             }
         }
     
