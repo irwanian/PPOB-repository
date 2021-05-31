@@ -116,7 +116,7 @@ const processTransaction = async (params) => {
         mid: reqId
     })
 
-    const result = await ApiDependency.buyPpobProduct(queryParams)
+    const result = await ApiDependency.buyPrepaidPpobProduct(queryParams)
     console.log(result.data)
 
     return result
