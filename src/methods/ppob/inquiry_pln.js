@@ -1,6 +1,8 @@
 const qs = require('qs')
 const ApiDependency = require('../../utils/api_dependency')
 const Helpers = require('../../utils/helpers')
+const Transformer = require('../../transformers/ppob/inquiry_pln')
+
 
 module.exports = inquiryPln = async (req, res) => {
     const { destination_number } = req.body
@@ -12,12 +14,14 @@ module.exports = inquiryPln = async (req, res) => {
             userid: process.env.NARINDO_USER_ID
         })
 
-        let payload = await ApiDependency.inquiryPln(inquiryPayload)
-        if (!payload.status) {
-            return res.error({ message: payload.message })
+        let inquiryResult = await ApiDependency.inquiryPln(inquiryPayload)
+        if (!inquiryResult.status) {
+            return res.error({ message: inquiryResult.message })
         }
 
-        payload = Helpers.parseDataObject(payload.data)
+        inquiryResult = Helpers.parseDataObject(inquiryResult.data)
+
+        const payload = Transformer.transform(inquiryResult)
 
         return res.success({ payload })
     } catch (error) {
