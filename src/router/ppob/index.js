@@ -45,7 +45,7 @@ router.post('/test/transaction', (req, res) => {
             headers: {
                 Accept: '*/*',
                 "Content-Type": "application/x-www-form-urlencoded",
-                Host: "https://h2hdev.narindo.com:9902" 
+                Host: "h2hdev.narindo.com:9902" 
           }
         }
     
