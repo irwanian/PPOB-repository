@@ -51,7 +51,7 @@ router.post('/test/transaction', (req, res) => {
         axios.post('https://h2hdev.narindo.com:9902/v3/h2h', queryParams, headers)
         .then((data) => {
             console.log('oy====', data)
-            res.success({ payload: data.data })
+            res.success({ payload: { ...data.data, queryParams, sign } })
         })
         .catch(err => {
             console.log('ey======', err)
