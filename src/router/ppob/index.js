@@ -14,10 +14,12 @@ const setReqId = () => {
 
 const setTransactionSign = (params) => {
     const { reqId, msisdn, product } = params
+    console.log('asuppp', reqId + msisdn + product + NARINDO_USER_ID + NARINDO_PASSWORD)
     const sign = crypto
                     .createHash('sha1')
                     .update(reqId + msisdn + product + NARINDO_USER_ID + NARINDO_PASSWORD)
                     .digest('hex')
+                    .toUpperCase()
 
     return sign
 }
