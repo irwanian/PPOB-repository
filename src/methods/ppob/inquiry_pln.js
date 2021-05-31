@@ -1,5 +1,6 @@
 const qs = require('qs')
 const ApiDependency = require('../../utils/api_dependency')
+const Helpers = require('../../utils/helpers')
 
 module.exports = inquiryPln = async (req, res) => {
     const { destination_number } = req.body
@@ -15,7 +16,9 @@ module.exports = inquiryPln = async (req, res) => {
             return res.error({ message: payload.message })
         }
 
-        return res.success({ payload: payload.data })
+        payload = Helpers.parseDataObject(payload.data)
+
+        return res.success({ payload })
     } catch (error) {
         console.log(error)
         return res.error(error)

@@ -49,8 +49,10 @@ module.exports.inquiryPln = async (params) => {
         }
 
         const narindoResponse = await axios.post(url, params, headers)
+        console.log(narindoResponse)
         result.data = narindoResponse
-        
+        console.log(result)
+
         return result
     } catch (error) {
         console.log(error)
