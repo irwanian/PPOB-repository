@@ -37,15 +37,14 @@ router.post('/test/transaction', (req, res) => {
             msisdn: destination_number,
             product: code,
             userid: NARINDO_USER_ID,
-            sign,
-            mid: String((Math.floor(Math.random() * 10000) + 1000))
+            sign
         })
 
         const headers = {
             headers: {
                 Accept: '*/*',
                 "Content-Type": "application/x-www-form-urlencoded",
-                Host: "h2hdev.narindo.com:9902" 
+                Host: "210.210.178.14:9902" 
           }
         }
     
