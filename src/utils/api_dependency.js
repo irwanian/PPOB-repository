@@ -19,7 +19,7 @@ module.exports.buyPrepaidPpobProduct = async (params) => {
         }
 
         const narindoResponse = await axios.post(url, params, headers)
-        result.data = narindoResponse
+        result.data = narindoResponse.data
 
         return result
     } catch (error) {
@@ -49,9 +49,7 @@ module.exports.inquiryPln = async (params) => {
         }
 
         const narindoResponse = await axios.post(url, params, headers)
-        console.log(narindoResponse)
-        result.data = narindoResponse
-        console.log(result)
+        result.data = narindoResponse.data
 
         return result
     } catch (error) {
