@@ -43,7 +43,8 @@ router.post('/test/transaction', (req, res) => {
         const headers = {
             headers: {
                 Accept: '*/*',
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Content-Type": "application/x-www-form-urlencoded",
+                Host: "https://210.210.178.14:9902"
             }
         }
     
@@ -54,7 +55,7 @@ router.post('/test/transaction', (req, res) => {
         })
         .catch(err => {
             console.log('ey======', err)
-            res.error(err)
+            res.error(err.response ? err.response.data.message : err.message)
         })
 })
 
