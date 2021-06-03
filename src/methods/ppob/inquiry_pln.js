@@ -11,7 +11,7 @@ module.exports = inquiryPln = async (req, res) => {
         const inquiryPayload = qs.stringify({
             ptype: 'pln',
             custid: destination_number,
-            userid: process.env.NARINDO_USER_ID
+            userid: process.env.NARINDO_PREPAID_USER_ID
         })
 
         let inquiryResult = await ApiDependency.inquiryPln(inquiryPayload)
@@ -21,9 +21,9 @@ module.exports = inquiryPln = async (req, res) => {
 
         inquiryResult = Helpers.parseDataObject(inquiryResult.data)
 
-        // const payload = Transformer.transform(inquiryResult)
-        const payload = inquiryResult
-        
+        const payload = Transformer.transform(inquiryResult)
+        // const payload = inquiryResult
+
         return res.success({ payload })
     } catch (error) {
         console.log(error)
