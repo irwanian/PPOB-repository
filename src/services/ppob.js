@@ -109,12 +109,13 @@ const processPrepaidTransaction = async (params) => {
     const queryParams = qs.stringify({ 
         reqid: reqId,
         msisdn: params.msisdn,
-        product: params.productCode,
+        product: params.product_code,
         userid: NARINDO_PREPAID_USER_ID,
         sign,
         mid: reqId
     })
 
+    console.log({ queryParams })
     const result = await ApiDependency.buyPrepaidPpobProduct(queryParams)
     console.log(result.data)
 
