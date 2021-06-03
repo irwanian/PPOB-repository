@@ -21,8 +21,9 @@ module.exports = inquiryPln = async (req, res) => {
 
         inquiryResult = Helpers.parseDataObject(inquiryResult.data)
 
-        const payload = Transformer.transform(inquiryResult)
-
+        // const payload = Transformer.transform(inquiryResult)
+        const payload = inquiryResult
+        
         return res.success({ payload })
     } catch (error) {
         console.log(error)
