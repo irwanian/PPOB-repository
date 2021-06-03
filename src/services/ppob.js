@@ -105,7 +105,9 @@ const setTransactionSign = (params, reqId) => {
 
 const processPrepaidTransaction = async (params) => {
     const reqId = setReqId()
+    console.log({ reqId, NARINDO_PREPAID_PASSWORD, NARINDO_PREPAID_USER_ID })
     const sign = setTransactionSign(params, reqId)
+    console.log({ sign })
     const queryParams = qs.stringify({ 
         reqid: reqId,
         msisdn: params.msisdn,
