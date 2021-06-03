@@ -193,14 +193,16 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
         status,
         expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:mm:ss')
     }
-
+console.log('abus222', order_id, status)
     try {
         let detail = {}
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
         
         await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
         if (status.toLowerCase() === 'settlement') {
+            console.log('abus3333')
             const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
+            console.log('abus44444')
             const payloadPpobTransaction = {
                 msisdn: transactionData.destination_number,
                 product_code: product.code.split('-')[1]
@@ -230,6 +232,7 @@ const handleMidtransNotification = async (params) => {
         status: true,
         message: ''
     }
+    console.log('abus111', params)
     const dbTransaction = await Models.sequelize.transaction()
     const { signature_key, status_code, gross_amount, order_id, transaction_status } = params
     if (signature_key === getMidtransSignatureKey(params)) {
