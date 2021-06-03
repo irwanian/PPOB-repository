@@ -34,10 +34,10 @@ const setProviderName = (code) => {
 }
 
 const setVendorCode = vendor => {
-    let vencorCode
+    let vendorCode
     
     if (vendor.toLowerCase() === 'narindo') {
-        vencorCode = 'NR'
+        vendorCode = 'NR'
     }
 
     return vendorCode
@@ -90,7 +90,7 @@ const insertProducts = async (products, vendor) => {
 }
 
 const setReqId = () => {
-    return 'ppob-' + moment().format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
+    return 'ppob' + moment().format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
 }
 
 const setTransactionSign = (params) => {
@@ -114,6 +114,7 @@ const processPrepaidTransaction = async (params) => {
         sign,
         mid: reqId
     })
+
     const result = await ApiDependency.buyPrepaidPpobProduct(queryParams)
     console.log(result.data)
 
