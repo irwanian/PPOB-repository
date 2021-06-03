@@ -38,7 +38,7 @@ module.exports.inquiryPln = async (params) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_URL}/v3/inquiry`
+    const url = `${process.env.NARINDO_PREPAID_URL}/v3/inquiry`
     
     try {
         const headers = {
