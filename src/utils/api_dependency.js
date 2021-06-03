@@ -99,3 +99,42 @@ module.exports.chargeMidtransPayment = async (payload) => {
         return result
     }
 }
+
+module.exports.requestMidtransSnap = async (payload) => {
+    const result = {
+        status: true,
+        code: 200,
+        data: {},
+        message: ''
+    }
+    try {
+
+        const midtransAuth = Buffer.from(process.env.MIDTRANS_SERVER_KEY + ':').toString('base64')
+        const url = `${process.env.MIDTRANS_SNAP_API}/v1/transactions`
+        const headers = {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization: 'Basic ' + midtransAuth
+            }
+        }
+        const midtransResponse = await axios.post(url, payload ,headers)
+        
+        if (!String(midtransResponse.status).startsWith('2')) {
+            result.status = false
+            result.code = 400
+            result.message = midtransResponse.message
+
+            return result
+        } 
+        
+        result.data = Helpers.parseDataObject(midtransResponse.data)       
+        
+        return result
+    } catch (error) {
+        result.status = false
+        result.code = 500
+        result.message = error.message
+        return result
+    }
+}

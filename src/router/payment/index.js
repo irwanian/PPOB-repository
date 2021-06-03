@@ -5,5 +5,6 @@ const method = require('../../methods/payment')
 
 router.post('/charge', method.chargePayment)
 router.post('/midtrans/notification', method.handleNotification)
+router.post('/midtrans/snap', method.midtransSnap)
 
 module.exports = router

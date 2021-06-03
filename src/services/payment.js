@@ -163,7 +163,7 @@ const chargePayment = async (payment_channel, ppob) => {
         result.data = await chargeOverTheCounter(params)
     }
 
-    const expired_at = moment().tz('Asia/Jakarta').add('24', 'hours').format('YYYY-MM-DD kk:mm:ss')
+    const expired_at = moment().tz('Asia/Jakarta').add('24', 'hours').format('YYYY-MM-DD HH:mm:ss')
     result.data.expired_at = expired_at
 
     return result
@@ -191,21 +191,21 @@ const getTransactionStatus = (status) => {
 const updatePaymentStatus = async (order_id, status, dbTransaction) => {
     const paymentUpdatePayload = {
         status,
-        expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD kk:mm:ss')
+        expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:mm:ss')
     }
 
     try {
         let detail = {}
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
         
-        const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
+        await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
         if (status.toLowerCase() === 'settlement') {
             const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
             const payloadPpobTransaction = {
                 msisdn: transactionData.destination_number,
                 product_code: product.code.split('-')[1]
             }
-            console.log(payloadPpobTransaction)
+
             const processedTransaction = await PpobService.processTransaction(payloadPpobTransaction)
             detail = processedTransaction.data
         }
@@ -214,8 +214,6 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
         await dbTransaction.commit()
         
         return processedTransaction
-        
-
     } catch (error) {
         if (dbTransaction) {
             await dbTransaction.rollback()
@@ -251,5 +249,6 @@ const handleMidtransNotification = async (params) => {
 
 module.exports = {
     chargePayment,
-    handleMidtransNotification
+    handleMidtransNotification,
+    getOrderId
 }
