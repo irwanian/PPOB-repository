@@ -49,9 +49,9 @@ try {
                 status: 'pending',
                 expired_at: Moment().tz('Asia/Jakarta').add(24, 'hours').format('YYYY-MM-DD HH:mm:ss')
             }
-            console.log(paymentPayload)
+
             const payment = await PaymentRepository.create(paymentPayload, dbTransaction)
-            console.log(payment)
+            
             await PpobTransactionRepository.update(body.transaction_id, { payment_id: payment.id }, dbTransaction)
             await dbTransaction.commit()
           
