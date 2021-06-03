@@ -99,7 +99,7 @@ const setTransactionSign = (params, reqId) => {
                     .createHash('sha1')
                     .update(reqId + msisdn + product_code + NARINDO_PREPAID_USER_ID + NARINDO_PREPAID_PASSWORD)
                     .toUpperCase()
-
+    console.log({ params, reqId })
     return sign
 }
 
@@ -113,6 +113,8 @@ const processPrepaidTransaction = async (params) => {
         userid: NARINDO_PREPAID_USER_ID,
         sign
     })
+
+    console.log({ queryParams })
 
     const result = await ApiDependency.buyPrepaidPpobProduct(queryParams)
     console.log(result.data)
