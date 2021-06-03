@@ -8,7 +8,7 @@ module.exports.buyPrepaidPpobProduct = async (params) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_URL}/v3/h2h`
+    const url = `${process.env.NARINDO_PREPAID_URL}/v3/h2h`
     
     try {
         const headers = {
