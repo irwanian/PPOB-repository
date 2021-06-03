@@ -208,6 +208,7 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
 
             const processedTransaction = await PpobService.processTransaction(payloadPpobTransaction)
             detail = processedTransaction.data
+            console.log({ processedTransaction })
         }
 
         await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
