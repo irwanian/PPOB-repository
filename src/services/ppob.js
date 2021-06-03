@@ -3,7 +3,7 @@ const qs = require('qs')
 const crypto = require('crypto')
 const ApiDependency = require('../utils/api_dependency')
 const PpobRepository = require('../repositories/ppob')
-const { NARINDO_PASSWORD, NARINDO_USER_ID } = process.env
+const { NARINDO_PREPAID_PASSWORD, NARINDO_PREPAID_USER_ID } = process.env
 
 const setProviderName = (code) => {
     let provider
@@ -114,7 +114,6 @@ const processPrepaidTransaction = async (params) => {
         sign,
         mid: reqId
     })
-    console.log({ queryParams })
     const result = await ApiDependency.buyPrepaidPpobProduct(queryParams)
     console.log(result.data)
 
