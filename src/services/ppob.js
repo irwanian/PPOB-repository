@@ -98,14 +98,13 @@ const setTransactionSign = (params, reqId) => {
     const sign = crypto
                     .createHash('sha1')
                     .update(reqId + msisdn + product_code + NARINDO_PREPAID_USER_ID + NARINDO_PREPAID_PASSWORD)
+                    .digest('hex')
                     .toUpperCase()
-    console.log({ params, reqId })
     return sign
 }
 
 const processPrepaidTransaction = async (params) => {
     const reqId = setReqId()
-    console.log({ reqId, NARINDO_PREPAID_PASSWORD, NARINDO_PREPAID_USER_ID })
     const sign = setTransactionSign(params, reqId)
     console.log({ sign })
     const queryParams = qs.stringify({ 
