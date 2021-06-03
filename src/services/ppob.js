@@ -114,7 +114,7 @@ const processPrepaidTransaction = async (params) => {
         sign,
         mid: reqId
     })
-
+    console.log({ queryParams })
     const result = await ApiDependency.buyPrepaidPpobProduct(queryParams)
     console.log(result.data)
 

@@ -199,11 +199,12 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
         
         if (status.toLowerCase() === 'settlement') {
             const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
+            
             const payloadPpobTransaction = {
                 msisdn: transactionData.destination_number,
                 product_code: product.code.split('-')[1]
             }
-
+            console.log('3333', payloadPpobTransaction)
             const processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
             detail = processedTransaction.data
         }
