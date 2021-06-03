@@ -206,7 +206,7 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
                 product_code: product.code.split('-')[1]
             }
 
-            const processedTransaction = await PpobService.processTransaction(payloadPpobTransaction)
+            const processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
             detail = processedTransaction.data
             console.log({ processedTransaction })
         }

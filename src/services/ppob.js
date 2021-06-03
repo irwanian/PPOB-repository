@@ -97,21 +97,20 @@ const setTransactionSign = (params) => {
     const { reqId, msisdn, product } = params
     const sign = crypto
                     .createHash('sha1')
-                    .update(reqId + msisdn + product + NARINDO_USER_ID + NARINDO_PASSWORD)
-                    .digest('hex')
+                    .update(reqId + msisdn + product + NARINDO_PREPAID_USER_ID + NARINDO_PREPAID_PASSWORD)
                     .toUpperCase()
 
     return sign
 }
 
-const processTransaction = async (params) => {
+const processPrepaidTransaction = async (params) => {
     const reqId = setReqId()
     const sign = setTransactionSign(params)
     const queryParams = qs.stringify({ 
         reqid: reqId,
         msisdn: params.msisdn,
         product: params.productCode,
-        userid: NARINDO_USER_ID,
+        userid: NARINDO_PREPAID_USER_ID,
         sign,
         mid: reqId
     })
@@ -124,5 +123,5 @@ const processTransaction = async (params) => {
 
 module.exports = {
     insertProducts,
-    processTransaction
+    processPrepaidTransaction
 }
