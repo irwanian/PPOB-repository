@@ -93,11 +93,11 @@ const setReqId = () => {
     return 'ppob' + moment().format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
 }
 
-const setTransactionSign = (params) => {
-    const { reqId, msisdn, product } = params
+const setTransactionSign = (params, reqId) => {
+    const { msisdn, product_code } = params
     const sign = crypto
                     .createHash('sha1')
-                    .update(reqId + msisdn + product + NARINDO_PREPAID_USER_ID + NARINDO_PREPAID_PASSWORD)
+                    .update(reqId + msisdn + product_code + NARINDO_PREPAID_USER_ID + NARINDO_PREPAID_PASSWORD)
                     .toUpperCase()
 
     return sign
@@ -105,14 +105,13 @@ const setTransactionSign = (params) => {
 
 const processPrepaidTransaction = async (params) => {
     const reqId = setReqId()
-    const sign = setTransactionSign(params)
+    const sign = setTransactionSign(params, reqId)
     const queryParams = qs.stringify({ 
         reqid: reqId,
         msisdn: params.msisdn,
         product: params.product_code,
         userid: NARINDO_PREPAID_USER_ID,
-        sign,
-        mid: reqId
+        sign
     })
 
     const result = await ApiDependency.buyPrepaidPpobProduct(queryParams)
