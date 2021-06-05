@@ -194,13 +194,17 @@ const mapResponsePayload = (data, product) => {
         const token = data.sn.split('Token ')[1]
         const kwh = data.sn.split('kWh ')[1].split(' ')[0]
         
-        result.token = token
-        result.kwh = kwh
+        result.token = token || null
+        result.kwh = kwh || null
         result.sn = null
+        result.status = data.status || null
+        result.message = data.message || null
     } else {
         result.token = null
         result.kwh = null
-        result.serial_number = data.sn
+        result.serial_number = data.sn || null
+        result.status = data.status || null
+        result.message = data.message || null
     }
 
     return result
@@ -229,9 +233,13 @@ const updatePrepaidPaymentStatus = async (order_id, status, dbTransaction) => {
             detail = mapResponsePayload(processedTransaction, product)
         }
 
-        await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
+        if (detail.status === 1) {
+            await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
+        } else {
+            await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'failed', detail } , dbTransaction)    
+        }
         await dbTransaction.commit()
-        
+
         return processedTransaction
     } catch (error) {
         if (dbTransaction) {
