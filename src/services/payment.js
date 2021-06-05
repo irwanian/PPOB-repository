@@ -197,13 +197,13 @@ const mapResponsePayload = (data, product) => {
         result.token = token || null
         result.kwh = kwh || null
         result.sn = null
-        result.status = data.status || null
+        result.status = data.status === 1 ? 'success' : 'failed'
         result.message = data.message || null
     } else {
         result.token = null
         result.kwh = null
         result.serial_number = data.sn || null
-        result.status = data.status || null
+        result.status = data.status === 1 ? 'success' : 'failed'
         result.message = data.message || null
     }
 
