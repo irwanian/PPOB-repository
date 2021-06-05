@@ -187,7 +187,25 @@ const getTransactionStatus = (status) => {
     return result
 }
 
-const updatePaymentStatus = async (order_id, status, dbTransaction) => {
+const mapResponsePayload = (data, product, destination_number) => {
+    const result = {}
+    if (product.provider.toLowerCase().includes('pln')) {
+        const token = data.sn.split('Token')[1]
+        const kwh = data.sn.split('kWh ')[1].split(' ')[0]
+        
+        result.token = token
+        result.kwh = kwh
+        result.sn = null
+    } else {
+        result.token = null
+        result.kwh = null
+        result.serial_number = data.sn
+    }
+
+    return result
+}
+
+const updatePrepaidPaymentStatus = async (order_id, status, dbTransaction) => {
     const paymentUpdatePayload = {
         status,
         expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:mm:ss')
@@ -207,7 +225,7 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
             }
 
             const processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
-            detail = processedTransaction   
+            detail = mapResponsePayload(processedTransaction, product.code, transactionData.destination_number)
         }
 
         await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
@@ -233,7 +251,7 @@ const handleMidtransNotification = async (params) => {
     const { signature_key, status_code, gross_amount, order_id, transaction_status } = params
     if (signature_key === getMidtransSignatureKey(params)) {
         if (status_code === '200' && transaction_status.toLowerCase() === 'settlement') {
-              const updateResult = await updatePaymentStatus(order_id, transaction_status, dbTransaction)
+              const updateResult = await updatePrepaidPaymentStatus(order_id, transaction_status, dbTransaction)
               
               if (updateResult !== 'error') {
                   result.message = 'success'
