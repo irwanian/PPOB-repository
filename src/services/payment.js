@@ -216,7 +216,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, dbTransaction) => {
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
         const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
         
-        if (status.toLowerCase() === 'settlement') {
+        if (status.toLowerCase() === 'settlement' && transactionData.status.toLowerCase() !== 'settlement') {
             console.log("let's proceed", transactionData.destination_number)
             const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
             
@@ -226,7 +226,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, dbTransaction) => {
             }
 
             const processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
-            detail = mapResponsePayload(processedTransaction, product.code, transactionData.destination_number)
+            detail = mapResponsePayload(processedTransaction, product)
         }
 
         await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
