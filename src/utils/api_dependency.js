@@ -19,7 +19,6 @@ module.exports.buyPrepaidPpobProduct = async (params) => {
         }
 
         const narindoResponse = await axios.post(url, params, headers)
-        console.log({ narindoResponse })
         result.data = narindoResponse.data
 
         return result

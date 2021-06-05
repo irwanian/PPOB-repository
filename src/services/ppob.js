@@ -106,7 +106,6 @@ const setTransactionSign = (params, reqId) => {
 const processPrepaidTransaction = async (params) => {
     const reqId = setReqId()
     const sign = setTransactionSign(params, reqId)
-    console.log({ sign })
     const queryParams = qs.stringify({ 
         reqid: reqId,
         msisdn: params.msisdn,
@@ -115,12 +114,10 @@ const processPrepaidTransaction = async (params) => {
         sign
     })
 
-    console.log({ queryParams })
-
     const result = await ApiDependency.buyPrepaidPpobProduct(queryParams)
     console.log(result.data)
 
-    return result
+    return result.data
 }
 
 module.exports = {

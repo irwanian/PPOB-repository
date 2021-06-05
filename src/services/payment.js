@@ -198,15 +198,16 @@ const updatePaymentStatus = async (order_id, status, dbTransaction) => {
         const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
         
         if (status.toLowerCase() === 'settlement') {
+            console.log("let's proceed", transactionData.destination_number)
             const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
             
             const payloadPpobTransaction = {
                 msisdn: transactionData.destination_number,
                 product_code: product.code.split('-')[1]
             }
-            
+
             const processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
-            detail = processedTransaction.data
+            detail = processedTransaction   
         }
 
         await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
@@ -226,6 +227,7 @@ const handleMidtransNotification = async (params) => {
         status: true,
         message: ''
     }
+    console.log('incoming payment response from midtrans====', params)
 
     const dbTransaction = await Models.sequelize.transaction()
     const { signature_key, status_code, gross_amount, order_id, transaction_status } = params
