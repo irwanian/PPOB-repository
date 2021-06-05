@@ -243,11 +243,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, dbTransaction) => {
             detail = mapResponsePayload(processedTransaction, product)
         }
 
-        if (detail.status === 1) {
-            await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: getTransactionStatus(status), detail } , dbTransaction)
-        } else {
-            await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'failed', detail } , dbTransaction)    
-        }
+        await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail } , dbTransaction)
         await dbTransaction.commit()
 
         return processedTransaction
