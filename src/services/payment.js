@@ -189,6 +189,16 @@ const getTransactionStatus = (status) => {
 
 const mapResponsePayload = (data, product) => {
     const result = {}
+    let status
+    
+    if (data.status === 1) {
+        status = 'success'
+    } else if (data.status === 2) {
+        status = 'pending'
+    } else {
+        status = 'failed'
+    }
+
     console.log(product.provider.toLowerCase())
     if (product.provider.toLowerCase().includes('pln')) {
         const token = data.sn.split('Token ')[1]
