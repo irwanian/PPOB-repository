@@ -187,8 +187,9 @@ const getTransactionStatus = (status) => {
     return result
 }
 
-const mapResponsePayload = (data, product, destination_number) => {
+const mapResponsePayload = (data, product) => {
     const result = {}
+    console.log(product.provider.toLowerCase())
     if (product.provider.toLowerCase().includes('pln')) {
         const token = data.sn.split('Token ')[1]
         const kwh = data.sn.split('kWh ')[1].split(' ')[0]
