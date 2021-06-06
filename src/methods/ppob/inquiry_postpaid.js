@@ -28,7 +28,9 @@ module.exports = inquiryPostpaid = async (req, res) => {
             ptype: product.code.split('-')[1],
             destination_number,
             timestamp: 'test dulu',
-            customer_name: 'test dulu'
+            customer_name: 'test dulu',
+            amount: inquiryResult.info1.amount || 666666,
+            fee: inquiryResult.info1.fee ? inquiryResult.info1.admin || 666666,
         }
 
         const payload = await InquiryPostpaidRepository.create(createInquiryPayload)
