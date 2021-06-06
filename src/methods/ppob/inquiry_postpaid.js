@@ -23,20 +23,26 @@ module.exports = inquiryPostpaid = async (req, res) => {
         }
 
         inquiryResult = Helpers.parseDataObject(inquiryResult.data)
+        
         const createInquiryPayload = {
             detail: inquiryResult,
             ptype: product.code.split('-')[1],
             destination_number,
-            timestamp: inquiryResult.timestamp,
-            customer_name: inquiryResult.info1.name || 'test',
-            amount: inquiryResult.info1.amount || 666666,
-            fee: inquiryResult.info1.fee ? inquiryResult.info1.fee : inquiryResult.info1.admin || 666666,
+            timestamp: inquiryResult.timestamp || '',
+            customer_name: inquiryResult.info1.name || '',
+            amount: inquiryResult.info1.amount || 0,
+            fee: inquiryResult.info1.fee ? inquiryResult.info1.fee : inquiryResult.info1.admin || 0,
+            status: inquiryResult.status
         }
 
-        const payload = await InquiryPostpaidRepository.create(createInquiryPayload)
-        // const payload = Transformer.transform(inquiryResult)
+        let payload;
 
-        // const payload = inquiryResult
+        if (inquiryResult.status === 1) {
+            payload = await InquiryPostpaidRepository.create(createInquiryPayload)
+            payload.status = inquiryResult.status
+        } else {
+            payload = createInquiryPayload
+        }
 
         return res.success({ payload })
     } catch (error) {
