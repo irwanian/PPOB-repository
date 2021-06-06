@@ -203,8 +203,8 @@ module.exports.requestMidtransSnap = async (payload) => {
         const url = `${process.env.MIDTRANS_SNAP_API}/v1/transactions`
         const headers = {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                Accept: 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
                 Authorization: 'Basic ' + midtransAuth
             }
         }
