@@ -18,7 +18,7 @@ module.exports = requestPpobPostpaidTransaction = async (req, res) => {
 
         const transactionPayload = {
             user: { name: 'TEST STAGING' },
-            destination_number: inquiry_id.destination_number,
+            destination_number: inquiry.destination_number,
             status: 'pending',
             payment_id: null,
             ppob_product_id: products.id,
