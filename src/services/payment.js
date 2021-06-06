@@ -247,15 +247,16 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                 payloadPpobTransaction.msisdn = transactionData.destination_number,
                 payloadPpobTransaction.product_code = product.code.split('-')[1]
                 processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
+                detail = mapResponsePayload(processedTransaction, product)
             } else if (product.plan === 'postpaid') {
                 payloadPpobTransaction.custid = transactionData.destination_number
                 payloadPpobTransaction.timestamp = transactionData.detail.timestamp
                 payloadPpobTransaction.ptype = transactionData.detail.ptype
 
                 processedTransaction = await PpobService.processPostpaidTransaction(payloadPpobTransaction)
+                detail = processedTransaction
             }
             
-            detail = mapResponsePayload(processedTransaction, product)
 
         } else if (status === 'expire' && transactionData.status === 'pending' && oldStatus === 'pending') {
             detail.status = 'failed'
