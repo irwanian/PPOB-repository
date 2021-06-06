@@ -27,7 +27,7 @@ try {
             const orderId = PaymentService.getOrderId()
             const payload = {
                 transaction_details: {
-                    gross_amount: ppob_product.selling_price,
+                    gross_amount: transaction.selling_price,
                     order_id: orderId
                 },
                 expiry: {
