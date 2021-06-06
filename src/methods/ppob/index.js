@@ -2,5 +2,6 @@ module.exports ={
     getPpobList: require('./ppob_list'),
     insertPpobProducts: require('./insert_ppob'),
     requestPpobTransaction: require('./transaction_request'),
-    inquiryPln: require('./inquiry_pln')
+    inquiryPrepaidPln: require('./inquiry_prepaid_pln'),
+    inquiryPostpaid: require('./inquiry_postpaid')
 } 

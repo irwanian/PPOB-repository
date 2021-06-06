@@ -1,10 +1,10 @@
 const qs = require('qs')
 const ApiDependency = require('../../utils/api_dependency')
 const Helpers = require('../../utils/helpers')
-const Transformer = require('../../transformers/ppob/inquiry_pln')
+const Transformer = require('../../transformers/ppob/inquiry_prepaid_pln')
 
 
-module.exports = inquiryPln = async (req, res) => {
+module.exports = inquiryPrepaidPln = async (req, res) => {
     const { destination_number } = req.body
     
     try {
@@ -14,7 +14,7 @@ module.exports = inquiryPln = async (req, res) => {
             userid: process.env.NARINDO_PREPAID_USER_ID
         })
 
-        let inquiryResult = await ApiDependency.inquiryPln(inquiryPayload)
+        let inquiryResult = await ApiDependency.inquiryPrepaidPln(inquiryPayload)
         if (!inquiryResult.status) {
             return res.error({ message: inquiryResult.message })
         }
