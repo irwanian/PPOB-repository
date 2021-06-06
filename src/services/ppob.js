@@ -3,7 +3,7 @@ const qs = require('qs')
 const crypto = require('crypto')
 const ApiDependency = require('../utils/api_dependency')
 const PpobRepository = require('../repositories/ppob')
-const { NARINDO_PREPAID_PASSWORD, NARINDO_PREPAID_USER_ID } = process.env
+const { NARINDO_POSTPAID_PASSWORD, NARINDO_POSTPAID_USER_ID, NARINDO_PREPAID_USER_ID, NARINDO_PREPAID_PASSWORD } = process.env
 
 const setProviderName = (code) => {
     let provider
@@ -93,19 +93,31 @@ const setReqId = () => {
     return 'ppob' + moment().format('YYYYMMDD') + String((Math.floor(Math.random() * 10000) + 1000))
 }
 
-const setTransactionSign = (params, reqId) => {
-    const { msisdn, product_code } = params
-    const sign = crypto
+const setTransactionSign = (params, reqId, type) => {
+    const { msisdn = null, product_code = null, timestamp = null, ptype = null, custid = null } = params
+    let sign
+
+    if (type === 'prepaid') {
+        sign = crypto
                     .createHash('sha1')
                     .update(reqId + msisdn + product_code + NARINDO_PREPAID_USER_ID + NARINDO_PREPAID_PASSWORD)
                     .digest('hex')
                     .toUpperCase()
+        return sign
+    }  else if (type === 'postpaid') {
+        sign = crypto
+                    .createHash('sha1')
+                    .update(reqId + timestamp + custid + ptype + NARINDO_POSTPAID_USER_ID + NARINDO_POSTPAID_PASSWORD)
+                    .digest('hex')
+                    .toUpperCase()
+    }
+
     return sign
 }
 
 const processPrepaidTransaction = async (params) => {
     const reqId = setReqId()
-    const sign = setTransactionSign(params, reqId)
+    const sign = setTransactionSign(params, reqId, 'prepaid')
     const queryParams = qs.stringify({ 
         reqid: reqId,
         msisdn: params.msisdn,
@@ -120,7 +132,25 @@ const processPrepaidTransaction = async (params) => {
     return result.data
 }
 
+const processPostpaidTransaction = async (params) => {
+    const reqId = setReqId()
+    const sign = setTransactionSign(params, reqId, 'postpaid')
+    const queryParams = qs.stringify({ 
+        reqid: reqId,
+        custid: params.custid,
+        ptype: params.ptype,
+        userid: NARINDO_POSTPAID_USER_ID,
+        sign
+    })
+
+    const result = await ApiDependency.buyPostpaidPpobProduct(queryParams)
+    console.log(result.data)
+
+    return result.data
+}
+
 module.exports = {
     insertProducts,
-    processPrepaidTransaction
+    processPrepaidTransaction,
+    processPostpaidTransaction
 }

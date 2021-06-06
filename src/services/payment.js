@@ -235,17 +235,28 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
         const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
         
+
         if (status === 'settlement' && transactionData.status !== 'success' && oldStatus === 'pending') {
             console.log("let's proceed", transactionData.destination_number)
             const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
             
-            const payloadPpobTransaction = {
-                msisdn: transactionData.destination_number,
-                product_code: product.code.split('-')[1]
-            }
+            const payloadPpobTransaction = {}
+            let processedTransaction
 
-            const processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
+            if (product.plan === 'prepaid') {
+                payloadPpobTransaction.msisdn = transactionData.destination_number,
+                payloadPpobTransaction.product_code = product.code.split('-')[1]
+                processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
+            } else if (product.plan === 'postpaid') {
+                payloadPpobTransaction.custid = transactionData.destination_number
+                payloadPpobTransaction.timestamp = transactionData.detail.timestamp
+                payloadPpobTransaction.ptype = transactionData.detail.ptype
+
+                processedTransaction = await PpobService.processPostpaidTransaction(payloadPpobTransaction)
+            }
+            
             detail = mapResponsePayload(processedTransaction, product)
+
         } else if (status === 'expire' && transactionData.status === 'pending' && oldStatus === 'pending') {
             detail.status = 'failed'
         } else if (status === 'failure' && transactionData.status === 'pending' && oldStatus === 'pending') {

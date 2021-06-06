@@ -7,6 +7,7 @@ router.get('/', validate(schema.getPpobList), method.getPpobList)
 router.post('/insert-multiple', method.insertPpobProducts)
 router.post('/transaction/inquiry-prepaid', method.inquiryPrepaidPln)
 router.post('/transaction/inquiry-postpaid', method.inquiryPostpaid)
-router.post('/transaction/request', method.requestPpobTransaction)
+router.post('/transaction/prepaid/request', method.requestPpobPrepaidTransaction)
+router.post('/transaction/postpaid/request', method.requestPpobPostpaidTransaction)
 
 module.exports = router

@@ -3,7 +3,7 @@ const PpobTransactionRepository = require('../../repositories/ppob_transaction')
 const Helpers = require('../../utils/helpers')
 const PpobService = require('../../services/ppob')
 
-module.exports = requestPpobTransaction = async (req, res) => {
+module.exports = requestPpobPrepaidTransaction = async (req, res) => {
     const { user_id, product_id, destination_number } = req.body
     
     try {
@@ -16,7 +16,7 @@ module.exports = requestPpobTransaction = async (req, res) => {
             status: 'pending',
             payment_id: null,
             ppob_product_id: products.id,
-            purchase_price: products.plan === 'prepaid' ? products.purchase_price : 0,
+            purchase_price: products.purchase_price,
             selling_price: products.selling_price,
             detail: {}
         }
