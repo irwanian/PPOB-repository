@@ -5,7 +5,7 @@ const Helpers = require('../../utils/helpers')
 const PpobService = require('../../services/ppob')
 
 module.exports = requestPpobPostpaidTransaction = async (req, res) => {
-    const { user_id, product_id, destination_number, inquiry_id } = req.body
+    const { user_id, product_id, inquiry_id } = req.body
     
     try {
         let [products, inquiry] = await Promise.all([
@@ -18,7 +18,7 @@ module.exports = requestPpobPostpaidTransaction = async (req, res) => {
 
         const transactionPayload = {
             user: { name: 'TEST STAGING' },
-            destination_number,
+            destination_number: inquiry_id.destination_number,
             status: 'pending',
             payment_id: null,
             ppob_product_id: products.id,
