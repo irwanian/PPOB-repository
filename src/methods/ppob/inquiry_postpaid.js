@@ -1,3 +1,4 @@
+const qs = require('qs')
 const ApiDependency = require('../../utils/api_dependency')
 const Helpers = require('../../utils/helpers')
 const Transformer = require('../../transformers/ppob/inquiry_postpaid')
@@ -10,11 +11,11 @@ module.exports = inquiryPostpaid = async (req, res) => {
     try {
         const product = await PpobProductRepository.findOne({ id: product_id })
 
-        const inquiryPayload = {
+        const inquiryPayload = qs.stringify({
             ptype: product.code.split('-')[1],
             custid: destination_number,
             userid: process.env.NARINDO_POSTPAID_USER_ID
-        }
+        })
 
         let inquiryResult = await ApiDependency.inquiryPostpaid(inquiryPayload)
         if (!inquiryResult.status) {
@@ -24,7 +25,7 @@ module.exports = inquiryPostpaid = async (req, res) => {
         inquiryResult = Helpers.parseDataObject(inquiryResult.data)
         const createInquiryPayload = {
             detail: inquiryResult,
-            ptype: inquiryPayload.ptype,
+            ptype: product.code.split('-')[1],
             destination_number,
             timestamp: 'test dulu',
             customer_name: 'test dulu'

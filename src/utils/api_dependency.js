@@ -38,13 +38,13 @@ module.exports.buyPostpaidPpobProduct = async (payload) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_POSTPAID_URL}/json/payment`
+    const url = `${process.env.NARINDO_POSTPAID_URL}/url/payment`
     
     try {
         const headers = {
             headers: {
                 Accept: '*/*',
-                "Content-Type": "application/json"
+                "Content-Type": "application/x-www-form-urlencoded"
             }
         }
 
@@ -68,13 +68,13 @@ module.exports.buyPostpaidPdam = async (payload) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_POSTPAID_PDAM_URL}/json/payment`
+    const url = `${process.env.NARINDO_POSTPAID_PDAM_URL}/url/payment`
     
     try {
         const headers = {
             headers: {
                 Accept: '*/*',
-                "Content-Type": "application/json"
+                "Content-Type": "application/x-www-form-urlencoded"
             }
         }
 
@@ -98,13 +98,13 @@ module.exports.inquiryPostpaid = async (payload) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_POSTPAID_URL}/json/inquiry`
+    const url = `${process.env.NARINDO_POSTPAID_URL}/url/inquiry`
     
     try {
         const headers = {
             headers: {
                 Accept: '*/*',
-                "Content-Type": "application/json"
+                "Content-Type": "application/x-www-form-urlencoded"
             }
         }
 
@@ -164,8 +164,8 @@ module.exports.chargeMidtransPayment = async (payload) => {
         const url = `${process.env.MIDTRANS_API}/v2/charge`
         const headers = {
             headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                Accept: 'application/x-www-form-urlencoded',
                 Authorization: 'Basic ' + midtransAuth
             }
         }
@@ -203,8 +203,8 @@ module.exports.requestMidtransSnap = async (payload) => {
         const url = `${process.env.MIDTRANS_SNAP_API}/v1/transactions`
         const headers = {
             headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                Accept: 'application/x-www-form-urlencoded',
                 Authorization: 'Basic ' + midtransAuth
             }
         }
