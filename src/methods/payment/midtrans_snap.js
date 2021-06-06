@@ -19,7 +19,7 @@ try {
             return res.error({ message: 'Data Transaksi Tidak Ditemukan' })
         } else if (!ppob_product) {
             return res.error({ message: 'Produk Tidak Ditemukan' })
-        } else if (transaction.ppob_product_id !== ppob_product.id || transaction.selling_price !== ppob_product.selling_price) {
+        } else if (transaction.ppob_product_id !== ppob_product.id) {
             return res.error({ message: 'Data Transaksi Tidak Sesuai, Mohon Ulangi Kembali Transaksi Anda' })
         }
 
