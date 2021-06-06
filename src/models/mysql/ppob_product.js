@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(30),
         allowNull: false,
       },
+      plan: {
+        type: DataTypes.STRING(45),
+        allowNull: false,
+      },
       category: {
         type: DataTypes.STRING(50),
         allowNull: false,

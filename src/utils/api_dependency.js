@@ -14,11 +14,71 @@ module.exports.buyPrepaidPpobProduct = async (params) => {
         const headers = {
             headers: {
                 Accept: '*/*',
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Content-Type": "application/json"
             }
         }
 
         const narindoResponse = await axios.post(url, params, headers)
+        result.data = narindoResponse.data
+
+        return result
+    } catch (error) {
+        console.log(error)
+        result.status = false
+        result.code = 500
+        result.message = error.message
+        return result
+    }
+}
+
+module.exports.buyPostpaidPpobProduct = async (payload) => {
+    const result = {
+        status: true,
+        code: 200,
+        message: '',
+        data: {}
+    }
+    const url = `${process.env.NARINDO_POSTPAID_URL}/json/payment`
+    
+    try {
+        const headers = {
+            headers: {
+                Accept: '*/*',
+                "Content-Type": "application/json"
+            }
+        }
+
+        const narindoResponse = await axios.post(url, payload, headers)
+        result.data = narindoResponse.data
+
+        return result
+    } catch (error) {
+        console.log(error)
+        result.status = false
+        result.code = 500
+        result.message = error.message
+        return result
+    }
+}
+
+module.exports.buyPostpaidPdam = async (payload) => {
+    const result = {
+        status: true,
+        code: 200,
+        message: '',
+        data: {}
+    }
+    const url = `${process.env.NARINDO_POSTPAID_PDAM_URL}/json/payment`
+    
+    try {
+        const headers = {
+            headers: {
+                Accept: '*/*',
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }
+
+        const narindoResponse = await axios.post(url, payload, headers)
         result.data = narindoResponse.data
 
         return result

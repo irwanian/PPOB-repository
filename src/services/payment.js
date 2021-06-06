@@ -188,7 +188,6 @@ const getTransactionStatus = (status) => {
 }
 
 const mapResponsePayload = (data, product) => {
-    const result = {}
     let status
     
     if (data.status === 1) {
@@ -220,17 +219,23 @@ const mapResponsePayload = (data, product) => {
     return result
 }
 
-const updatePrepaidPaymentStatus = async (order_id, status, dbTransaction) => {
+const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransaction) => {
     const paymentUpdatePayload = {
         status,
         expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:mm:ss')
     }
     try {
-        let detail = {}
+        let detail = {
+                token: null,
+                kwh: null,
+                sn: null,
+                status: null,
+                message: null
+        }
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
         const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
         
-        if (status.toLowerCase() === 'settlement' && transactionData.status.toLowerCase() !== 'success') {
+        if (status === 'settlement' && transactionData.status !== 'success' && oldStatus === 'pending') {
             console.log("let's proceed", transactionData.destination_number)
             const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
             
@@ -241,6 +246,12 @@ const updatePrepaidPaymentStatus = async (order_id, status, dbTransaction) => {
 
             const processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
             detail = mapResponsePayload(processedTransaction, product)
+        } else if (status === 'expire' && transactionData.status === 'pending' && oldStatus === 'pending') {
+            detail.status = 'failed'
+        } else if (status === 'failure' && transactionData.status === 'pending' && oldStatus === 'pending') {
+            detail.status = 'failed'
+        } else if (status === 'deny' && transactionData.status === 'pending' && oldStatus === 'pending') {
+            detail.status = 'failed'
         }
 
         await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail } , dbTransaction)
@@ -264,21 +275,20 @@ const handleMidtransNotification = async (params) => {
 
     const dbTransaction = await Models.sequelize.transaction()
     const { signature_key, status_code, gross_amount, order_id, transaction_status } = params
+    const oldPaymentData = await PaymentRepository.findOne({ order_id })
     if (signature_key === getMidtransSignatureKey(params)) {
-        if (status_code === '200' && transaction_status.toLowerCase() === 'settlement') {
-              const updateResult = await updatePrepaidPaymentStatus(order_id, transaction_status, dbTransaction)
-              
-              if (updateResult !== 'error') {
-                  result.message = 'success'
-              } else {
-                  result.status = false
-                  result.message = 'error'
-              }
-
-              return result
+        const updateResult = await updatePrepaidPaymentStatus(order_id, transaction_status, oldPaymentData.status, dbTransaction)
+        
+        if (updateResult !== 'error') {
+            result.message = 'success'
         } else {
-            return 'pending'
+            result.status = false
+            result.message = 'error'
         }
+
+        return result
+    } else {
+        return 'pending'
     }
 }
 

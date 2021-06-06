@@ -16,7 +16,7 @@ module.exports = requestPpobTransaction = async (req, res) => {
             status: 'pending',
             payment_id: null,
             ppob_product_id: products.id,
-            purchase_price: products.purchase_price,
+            purchase_price: products.plan === 'prepaid' ? products.purchase_price : 0,
             selling_price: products.selling_price,
             detail: {}
         }
