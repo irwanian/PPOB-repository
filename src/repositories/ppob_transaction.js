@@ -24,7 +24,7 @@ const getRawList = async (where = {}, offset = 1, limit = 20, order) => {
         pp.category AS pp_category FROM ppob_transactions AS pt 
         INNER JOIN payments AS pa ON pt.payment_id = pa.id INNER JOIN ppob_products AS pp
         ON pt.ppob_product_id = pp.id
-        WHERE pt.user_slug = '${where.slug}')
+        WHERE pt.user_slug = '${where.slug}'
         ORDER BY '${order}' DESC LIMIT ${offset}, ${limit};`,{
         raw: true,
         type: Sequelize.QueryTypes.SELECT    
