@@ -251,7 +251,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
 
                 processedTransaction = await PpobService.processPostpaidTransaction(payloadPpobTransaction)
                 if (processedTransaction.status === 1) detail.status = 'success'
-                detail = processedTransaction
+                detail = mapResponsePayload(processedTransaction, product)
             }
             
 
