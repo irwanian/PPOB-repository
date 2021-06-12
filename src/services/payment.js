@@ -177,7 +177,8 @@ const getMidtransSignatureKey = (params) => {
 
 const mapResponsePayload = (data, product) => {
     let status
-    
+    const result = {}
+
     if (data.status === 1) {
         status = 'success'
     } else if (data.status === 2) {
@@ -205,7 +206,6 @@ const mapResponsePayload = (data, product) => {
             result.message = data.message || null
         }
     } else {
-        console.log(data['info1'])
         result.token = data['info1'].stand_meter || null
         result.kwh = null
         result.sn = data.sn || null
