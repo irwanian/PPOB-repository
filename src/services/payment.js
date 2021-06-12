@@ -228,13 +228,8 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
         expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:mm:ss')
     }
     try {
-        let detail = {
-                token: null,
-                kwh: null,
-                sn: null,
-                status: 'failed',
-                message: null
-        }
+        let detail = {}
+
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
         const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
         
@@ -252,7 +247,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                 processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
                 detail = mapResponsePayload(processedTransaction, product)
             } else if (product.plan === 'postpaid') {
-                console.log(transactionData)
+                console.log({ transactionData })
                 payloadPpobTransaction.custid = transactionData.destination_number
                 payloadPpobTransaction.timestamp = transactionData.detail.timestamp
                 payloadPpobTransaction.ptype = transactionData.detail.ptype
