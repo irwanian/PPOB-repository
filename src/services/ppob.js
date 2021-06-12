@@ -145,7 +145,7 @@ const processPostpaidTransaction = async (params) => {
 
     if(queryParams.toUpperCase().includes('%3A')) {
         console.log('masup')
-        queryParams.replace('%3A', ':')
+        queryParams = queryParams.replace('%3A', ':')
     }
 
     console.log(queryParams)
