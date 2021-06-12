@@ -255,7 +255,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                 payloadPpobTransaction.custid = transactionData.destination_number
                 payloadPpobTransaction.timestamp = transactionData.detail.timestamp
                 payloadPpobTransaction.ptype = transactionData.detail.ptype
-
+                
                 processedTransaction = await PpobService.processPostpaidTransaction(payloadPpobTransaction)
                 detail = mapResponsePayload(processedTransaction, product)
             }
