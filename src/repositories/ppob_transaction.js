@@ -37,7 +37,7 @@ const getMetaData = async (where = {}) => {
         `SELECT count(pt.id) AS count FROM ppob_transactions AS pt
         INNER JOIN payments AS pa ON pt.payment_id = pa.id
         INNER JOIN ppob_products AS pp ON pt.ppob_product_id = pp.id
-        WHERE (json_unquote(json_extract(pt.user,'$.\"slug\"')) = '${where.slug}');`, {
+        WHERE pt.user_slug = '${where.slug}';`, {
         raw: true,
         type: Sequelize.QueryTypes.SELECT
         }
