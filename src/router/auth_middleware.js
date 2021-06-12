@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
     const token = req.headers.authorization.replace('Bearer ', '')
     console.log({ token })
     try {
-        const userData = await axios.get(`http://kartunet.id/user/${req.body.user_id}`, {
+        const userData = await axios.get(`http://kartunet.id/api/user/${req.body.user_id}`, {
             headers: {
                 Accept: 'application/json',
                 Authorization: token
