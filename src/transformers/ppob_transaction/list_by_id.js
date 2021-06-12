@@ -11,7 +11,10 @@ module.exports = {
                 transaction_status: payload.status,
                 payment_status: payload.pa_status,
                 category: payload.pp_category,
-                expired_at: payload.pa_expired_at
+                expired_at: payload.pa_expired_at,
+                price: payload.purchase_price - payload.pp_purchase_price,
+                admin_fee: payload.pp_selling_price,
+                total_price: payload.selling_price
             }
         }) 
     }

@@ -19,6 +19,7 @@ const getRawList = async (where = {}, offset = 1, limit = 20, order) => {
         pt.status, pt.payment_id, pt.ppob_product_id, pt.detail,
         pa.order_id as pa_order_id, pa.status AS pa_status,
         pt.purchase_price, pp.purchase_price as pp_purchase_price,
+        pp.selling_price as pp_selling_price, pt.selling_price,
         pa.expired_at as pa_expired_at,
         pp.name AS pp_name, pp.provider AS pp_provider,
         pp.category AS pp_category FROM ppob_transactions AS pt 
