@@ -228,48 +228,55 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
         expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:mm:ss')
     }
     try {
-        let detail = {}
-
-        const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
-        const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
-        
-
-        if (status === 'settlement' && transactionData.status !== 'success' && oldStatus === 'pending') {
-            console.log("let's proceed", transactionData.destination_number)
-            const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
+        if (status !== 'pending') {
+            let detail = {}
             
-            const payloadPpobTransaction = {}
-            let processedTransaction
-
-            if (product.plan === 'prepaid') {
-                payloadPpobTransaction.msisdn = transactionData.destination_number,
-                payloadPpobTransaction.product_code = product.code.split('-')[1]
-                processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
-                detail = mapResponsePayload(processedTransaction, product)
-            } else if (product.plan === 'postpaid') {
-                console.log({ transactionData })
-                payloadPpobTransaction.custid = transactionData.destination_number
-                payloadPpobTransaction.timestamp = transactionData.detail.timestamp
-                payloadPpobTransaction.ptype = transactionData.detail.ptype
+            const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
+            const transactionData = await PpobTransactionRepository.findOne({ payment_id: updatedPayment.id }, dbTransaction)  
+            
+            
+            if (status === 'settlement' && transactionData.status !== 'success' && oldStatus === 'pending') {
                 
-                processedTransaction = await PpobService.processPostpaidTransaction(payloadPpobTransaction)
-                detail = mapResponsePayload(processedTransaction, product)
+                console.log("let's proceed", transactionData.destination_number)
+                const product = await PpobProductRepository.findOne({ id: transactionData.ppob_product_id })
+                
+                const payloadPpobTransaction = {}
+                let processedTransaction
+    
+                if (product.plan === 'prepaid') {
+                    payloadPpobTransaction.msisdn = transactionData.destination_number,
+                    payloadPpobTransaction.product_code = product.code.split('-')[1]
+                    processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
+                    detail = mapResponsePayload(processedTransaction, product)
+                } else if (product.plan === 'postpaid') {
+                    console.log({ transactionData })
+                    payloadPpobTransaction.custid = transactionData.destination_number
+                    payloadPpobTransaction.timestamp = transactionData.detail.timestamp
+                    payloadPpobTransaction.ptype = transactionData.detail.ptype
+                    
+                    processedTransaction = await PpobService.processPostpaidTransaction(payloadPpobTransaction)
+                    detail = mapResponsePayload(processedTransaction, product)
+                }
+                
+            console.log(detail)
+    
+            } else if (status === 'expire' && transactionData.status === 'pending' && oldStatus === 'pending') {
+                detail.status = 'failed'
+            } else if (status === 'failure' && transactionData.status === 'pending' && oldStatus === 'pending') {
+                detail.status = 'failed'
+            } else if (status === 'deny' && transactionData.status === 'pending' && oldStatus === 'pending') {
+                detail.status = 'failed'
             }
+    
+            await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail } , dbTransaction)
+            await dbTransaction.commit()
+    
+            return processedTransaction
+        } else {
+            console.log('bypass pending notif')
             
-        console.log(detail)
-
-        } else if (status === 'expire' && transactionData.status === 'pending' && oldStatus === 'pending') {
-            detail.status = 'failed'
-        } else if (status === 'failure' && transactionData.status === 'pending' && oldStatus === 'pending') {
-            detail.status = 'failed'
-        } else if (status === 'deny' && transactionData.status === 'pending' && oldStatus === 'pending') {
-            detail.status = 'failed'
+            return {}
         }
-
-        await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail } , dbTransaction)
-        await dbTransaction.commit()
-
-        return processedTransaction
     } catch (error) {
         if (dbTransaction) {
             await dbTransaction.rollback()
