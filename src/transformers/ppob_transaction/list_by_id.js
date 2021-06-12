@@ -21,7 +21,7 @@ module.exports = {
                 id: payload.id,
                 product: payload.pp_name.includes('POSTPAID') ? payload.pp_name.replace('POSTPAID', 'Pasca Bayar') : payload.pp_name,
                 provider: payload.pp_provider,
-                destination_number: getDestinationNumber(payload.destination_number, payload.provider.toLowerCase()),
+                destination_number: getDestinationNumber(payload.destination_number, payload.pp_provider.toLowerCase()),
                 category: payload.pp_category,
                 transaction_status: payload.status,
                 payment_status: payload.pa_status,
