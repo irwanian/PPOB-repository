@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const moment = require("moment-timezone");
+
 module.exports = (sequelize, DataTypes) => {
   class Payment extends Model {
     /**
