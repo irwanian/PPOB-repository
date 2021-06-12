@@ -137,7 +137,7 @@ const processPostpaidTransaction = async (params) => {
     const sign = setTransactionSign(params, reqId, 'postpaid')
     let queryParams = qs.stringify({ 
         reqid: reqId,
-        custid: params.custid,
+        custid: params.custid.split(':')[1],
         ptype: params.ptype,
         userid: NARINDO_POSTPAID_USER_ID,
         sign
