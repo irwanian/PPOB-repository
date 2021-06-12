@@ -175,18 +175,6 @@ const getMidtransSignatureKey = (params) => {
             .digest('hex')
 }
 
-const getTransactionStatus = (status) => {
-    let result
-
-    if (status === 'settlement') result = 'success'
-    if (status === 'deny') result = 'failed'
-    if (status === 'cancel') result = 'cancel'
-    if (status === 'expire') result = 'expired'
-    if (status === 'failure') result = 'failed'
-
-    return result
-}
-
 const mapResponsePayload = (data, product) => {
     let status
     
@@ -198,20 +186,28 @@ const mapResponsePayload = (data, product) => {
         status = 'failed'
     }
 
-    console.log(product.provider.toLowerCase())
-    if (product.provider.toLowerCase().includes('pln')) {
-        const token = data.sn.split('Token ')[1]
-        const kwh = data.sn.split('kWh ')[1].split(' ')[0]
-        
-        result.token = token || null
-        result.kwh = kwh || null
-        result.sn = null
-        result.status = status
-        result.message = data.message || null
+    if(product.plan ===  'prepaid') {
+        console.log(product.provider.toLowerCase())
+        if (product.provider.toLowerCase().includes('pln')) {
+            const token = data.sn.split('Token ')[1]
+            const kwh = data.sn.split('kWh ')[1].split(' ')[0]
+            
+            result.token = token || null
+            result.kwh = kwh || null
+            result.sn = null
+            result.status = status
+            result.message = data.message || null
+        } else {
+            result.token = null
+            result.kwh = null
+            result.serial_number = data.sn || null
+            result.status = status
+            result.message = data.message || null
+        }
     } else {
-        result.token = null
+        result.token = data.info1.stand_meter || null
         result.kwh = null
-        result.serial_number = data.sn || null
+        result.sn = data.sn || null
         result.status = status
         result.message = data.message || null
     }
@@ -254,6 +250,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                 payloadPpobTransaction.ptype = transactionData.detail.ptype
 
                 processedTransaction = await PpobService.processPostpaidTransaction(payloadPpobTransaction)
+                if (processedTransaction.status === 1) detail.status = 'success'
                 detail = processedTransaction
             }
             
