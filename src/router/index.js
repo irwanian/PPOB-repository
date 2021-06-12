@@ -69,6 +69,4 @@ sequelize.sync()
     throw err
 })
 
-
-
 module.exports = app

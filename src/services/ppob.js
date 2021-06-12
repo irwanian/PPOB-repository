@@ -143,6 +143,8 @@ const processPostpaidTransaction = async (params) => {
         sign
     })
 
+    console.log(queryParams)
+
     const result = await ApiDependency.buyPostpaidPpobProduct(queryParams)
     console.log(result.data)
 
