@@ -1,5 +1,15 @@
 const Models = require('../models').ppob_transaction
 
+const findAndCountAll = async (where = {}, offset = 1, limit = 20, order) => {
+    return await Models.findAndCountAll({
+        where,
+        limit,
+        offset,
+        order,
+    })
+}
+
+
 const findAll = async (where = {}, offset = 1, limit = 20, order) => {
     return await Models.findAll({
         where,
@@ -35,5 +45,6 @@ module.exports = {
     findOne,
     create,
     update,
-    updateByPaymentId
+    updateByPaymentId,
+    findAndCountAll
 }

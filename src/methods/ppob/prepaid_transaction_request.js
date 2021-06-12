@@ -11,7 +11,7 @@ module.exports = requestPpobPrepaidTransaction = async (req, res) => {
         products = Helpers.parseDataObject(products)
         
         const transactionPayload = {
-            user: { name: 'TEST STAGING' },
+            user: req.session,
             destination_number,
             status: 'pending',
             payment_id: null,
@@ -23,9 +23,9 @@ module.exports = requestPpobPrepaidTransaction = async (req, res) => {
 
         const payload = await PpobTransactionRepository.create(transactionPayload)
 
-        if (products.provider.toLowerCase() === 'pln') {
+        // if (products.provider.toLowerCase() === 'pln') {
 
-        } 
+        // } 
         
         return res.success({ payload: {
             transaction_id: payload.id
