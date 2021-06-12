@@ -186,7 +186,7 @@ const mapResponsePayload = (data, product) => {
         status = 'failed'
     }
 
-    if(product.plan ===  'prepaid') {
+    if(product.plan === 'prepaid') {
         console.log(product.provider.toLowerCase())
         if (product.provider.toLowerCase().includes('pln')) {
             const token = data.sn.split('Token ')[1]
@@ -205,6 +205,7 @@ const mapResponsePayload = (data, product) => {
             result.message = data.message || null
         }
     } else {
+        console.log(data, product.plan)
         result.token = data.info1.stand_meter || null
         result.kwh = null
         result.sn = data.sn || null
@@ -252,6 +253,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                 processedTransaction = await PpobService.processPostpaidTransaction(payloadPpobTransaction)
                 if (processedTransaction.status === 1) detail.status = 'success'
                 detail = mapResponsePayload(processedTransaction, product)
+                console.log(detail)
             }
             
 
