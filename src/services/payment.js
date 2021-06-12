@@ -205,16 +205,12 @@ const mapResponsePayload = (data, product) => {
             result.message = data.message || null
         }
     } else {
+        console.log(data['info1'])
         result.token = data['info1'].stand_meter || null
-        console.log('a', result)
         result.kwh = null
-        console.log('b', result)
         result.sn = data.sn || null
-        console.log('c', result)
         result.status = status
-        console.log('d', result)
         result.message = data.message || null
-        console.log('e', result)
     }
 
     return result
