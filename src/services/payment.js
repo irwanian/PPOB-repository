@@ -177,7 +177,13 @@ const getMidtransSignatureKey = (params) => {
 
 const mapResponsePayload = (data, product) => {
     let status
-    const result = {}
+    const result = {
+        token: null,
+        kwh: null,
+        sn: null,
+        status: null,
+        message: null
+    }
 
     if (data.status === 1) {
         status = 'success'
@@ -226,7 +232,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                 token: null,
                 kwh: null,
                 sn: null,
-                status: null,
+                status: 'failed',
                 message: null
         }
         const updatedPayment = await PaymentRepository.updateByOrderId(order_id, paymentUpdatePayload, dbTransaction)
@@ -251,11 +257,10 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                 payloadPpobTransaction.ptype = transactionData.detail.ptype
 
                 processedTransaction = await PpobService.processPostpaidTransaction(payloadPpobTransaction)
-                if (processedTransaction.status === 1) detail.status = 'success'
                 detail = mapResponsePayload(processedTransaction, product)
-                console.log(detail)
             }
             
+        console.log(detail)
 
         } else if (status === 'expire' && transactionData.status === 'pending' && oldStatus === 'pending') {
             detail.status = 'failed'
