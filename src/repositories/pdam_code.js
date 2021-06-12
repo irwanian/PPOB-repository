@@ -9,6 +9,14 @@ const findAndCountAll = async (where = {}, offset = 1, limit = 20, order) => {
     })
 }
 
+const findAll = async (where = {}, offset = 1, limit = 20, order) => {
+    return await Models.findAll({
+        where,
+        limit,
+        offset,
+        order
+    })
+}
 const findOne = async (where = {}, transaction = null) => {
     return await Models.findOne({
         where,
@@ -37,5 +45,6 @@ module.exports = {
     findOne,
     bulkInsert,
     create,
-    update
+    update,
+    findAll
 }

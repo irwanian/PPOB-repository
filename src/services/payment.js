@@ -260,11 +260,11 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                 
             console.log(detail)
     
-            } else if (status === 'expire' && transactionData.status === 'pending' && oldStatus === 'pending') {
+            } else if (status === 'expire' && oldStatus === 'pending') {
                 detail.status = 'failed'
-            } else if (status === 'failure' && transactionData.status === 'pending' && oldStatus === 'pending') {
+            } else if (status === 'failure' && oldStatus === 'pending') {
                 detail.status = 'failed'
-            } else if (status === 'deny' && transactionData.status === 'pending' && oldStatus === 'pending') {
+            } else if (status === 'deny' && oldStatus === 'pending') {
                 detail.status = 'failed'
             }
     

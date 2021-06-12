@@ -4,5 +4,6 @@ module.exports ={
     requestPpobPrepaidTransaction: require('./prepaid_transaction_request'),
     requestPpobPostpaidTransaction: require('./postpaid_transaction_request'),
     inquiryPrepaidPln: require('./inquiry_prepaid_pln'),
-    inquiryPostpaid: require('./inquiry_postpaid')
+    inquiryPostpaid: require('./inquiry_postpaid'),
+    getPdamList: require('./list_pdam')
 } 
