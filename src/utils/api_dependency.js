@@ -38,13 +38,13 @@ module.exports.buyPostpaidPpobProduct = async (payload) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_POSTPAID_URL}/url/payment`
+    const url = `${process.env.NARINDO_POSTPAID_URL}/json/payment`
     
     try {
         const headers = {
             headers: {
                 Accept: '*/*',
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Content-Type": "application/json"
             }
         }
 
