@@ -15,9 +15,15 @@ module.exports = requestPpobPostpaidTransaction = async (req, res) => {
 
         products = Helpers.parseDataObject(products)
         inquiry = Helpers.parseDataObject(inquiry)
- 
+        const user = {
+            name: req.session.name,
+            email: req.session.email,
+            phone: req.session.phone
+        }    
+
         const transactionPayload = {
-            user: req.session,
+            user,
+            user_slug: req.session.slug,
             destination_number: inquiry.destination_number,
             status: 'pending',
             payment_id: null,

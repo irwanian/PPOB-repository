@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       user: {
         type: DataTypes.JSON,
       },
+      user_slug: {
+        type: DataTypes.STRING(200)
+      },
       destination_number: {
         type: DataTypes.STRING(50),
         allowNull: false,

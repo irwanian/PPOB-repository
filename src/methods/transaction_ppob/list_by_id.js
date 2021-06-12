@@ -30,6 +30,7 @@ module.exports = getTransactionPpobListById = async (req, res) => {
             total_page: Math.ceil(meta[0].count / limit)
         }
 
+        console.log(products[0])
         let payload = Transformer.transform(products)
         payload = payload.sort((a, b) => a.id > b.id ? -1 : b.id > a.id ? 1 : 0)
 

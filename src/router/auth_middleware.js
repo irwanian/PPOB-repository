@@ -18,7 +18,6 @@ module.exports = async (req, res, next) => {
         const { id, name, email, phone, slug } = userData.data.data
     
         req.session = {
-            id,
             name,
             email,
             phone,
