@@ -135,12 +135,17 @@ const processPrepaidTransaction = async (params) => {
 const processPostpaidTransaction = async (params) => {
     const reqId = setReqId()
     const sign = setTransactionSign(params, reqId, 'postpaid')
-    let queryParams = { 
+    let queryParams = qs.stringify({ 
         reqid: reqId,
         custid: params.custid,
         ptype: params.ptype,
         userid: NARINDO_POSTPAID_USER_ID,
         sign
+    })
+
+    if(queryParams.toUpperCase().includes('%3A')) {
+        console.log('masup')
+        queryParams.replace('%3A', ':')
     }
 
     console.log(queryParams)
