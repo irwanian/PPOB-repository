@@ -252,6 +252,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                 processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
                 detail = mapResponsePayload(processedTransaction, product)
             } else if (product.plan === 'postpaid') {
+                console.log(transactionData)
                 payloadPpobTransaction.custid = transactionData.destination_number
                 payloadPpobTransaction.timestamp = transactionData.detail.timestamp
                 payloadPpobTransaction.ptype = transactionData.detail.ptype
