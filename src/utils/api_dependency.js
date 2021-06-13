@@ -61,14 +61,44 @@ module.exports.buyPostpaidPpobProduct = async (payload) => {
     }
 }
 
-module.exports.buyPostpaidPdam = async (payload) => {
+module.exports.checkStatusPostpaidPpobProduct = async (payload) => {
     const result = {
         status: true,
         code: 200,
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_POSTPAID_PDAM_URL}/url/payment`
+    const url = `${process.env.NARINDO_POSTPAID_URL}/url/advice`
+    
+    try {
+        const headers = {
+            headers: {
+                Accept: '*/*',
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }
+
+        const narindoResponse = await axios.post(url, payload, headers)
+        result.data = narindoResponse.data
+
+        return result
+    } catch (error) {
+        console.log(error)
+        result.status = false
+        result.code = 500
+        result.message = error.message
+        return result
+    }
+}
+
+module.exports.checkStatusPrepaidPpobProduct = async (payload) => {
+    const result = {
+        status: true,
+        code: 200,
+        message: '',
+        data: {}
+    }
+    const url = `${process.env.NARINDO_PREPAID_URL}/url/advice`
     
     try {
         const headers = {

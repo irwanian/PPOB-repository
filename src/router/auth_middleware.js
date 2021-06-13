@@ -1,4 +1,5 @@
 const axios = require('axios')
+const Helpers = require('../utils/helpers')
 
 module.exports = async (req, res, next) => {
     if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
@@ -8,14 +9,19 @@ module.exports = async (req, res, next) => {
     const token = req.headers.authorization
     
     try {
-        const userData = await axios.get(`https://kartunet.id/api/user/${req.body.user_id ? req.body.user_id : req.params.id}`, {
+        let userData
+        console.time('how long to get User detail')
+        userData = await axios.get(`https://kartunet.id/api/user/${req.body.user_id ? req.body.user_id : req.params.id}`, {
             headers: {
                 Accept: 'application/json',
                 Authorization: token
             }
         })
+        console.timeEnd('how long to get User detail')
 
-        const { id, name, email, phone, slug } = userData.data.data
+        userData = Helpers.parseDataObject(userData.data.data)
+
+        const { name, email, phone, slug } = userData
     
         req.session = {
             name,

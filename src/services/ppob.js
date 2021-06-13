@@ -129,7 +129,7 @@ const processPrepaidTransaction = async (params) => {
     const result = await ApiDependency.buyPrepaidPpobProduct(queryParams)
     console.log(result.data)
 
-    return result.data
+    return { ...result.data, reqid: reqId }
 }
 
 const processPostpaidTransaction = async (params) => {
@@ -154,7 +154,7 @@ const processPostpaidTransaction = async (params) => {
     const result = await ApiDependency.buyPostpaidPpobProduct(queryParams)
     console.log(result.data)
 
-    return result.data
+    return {...result.data, reqid: reqId }
 }
 
 module.exports = {

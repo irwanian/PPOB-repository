@@ -248,7 +248,7 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                     payloadPpobTransaction.product_code = product.code.split('-')[1]
                     processedTransaction = await PpobService.processPrepaidTransaction(payloadPpobTransaction)
                     detail = mapResponsePayload(processedTransaction, product)
-                    await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail } , dbTransaction)
+                    await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail: { ...transactionData.detail, detail, reqid: processedTransaction.reqid } } , dbTransaction)
                 } else if (product.plan === 'postpaid') {
                     console.log({ transactionData })
                     payloadPpobTransaction.custid = transactionData.destination_number
@@ -257,20 +257,17 @@ const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransac
                     
                     processedTransaction = await PpobService.processPostpaidTransaction(payloadPpobTransaction)
                     detail = mapResponsePayload(processedTransaction, product)
-                    await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail } , dbTransaction)
+                    await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail: { ...transactionData.detail, detail, reqid: processedTransaction.reqid } } , dbTransaction)
                 }
                 
             console.log(detail)
     
             } else if (status === 'expire' && oldStatus === 'pending') {
-                detail.status = 'failed'
-                await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail } , dbTransaction)
+                await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'failed' } , dbTransaction)
             } else if (status === 'failure' && oldStatus === 'pending') {
-                detail.status = 'failed'
-                await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail } , dbTransaction)
+                await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'failed' } , dbTransaction)
             } else if (status === 'deny' && oldStatus === 'pending') {
-                detail.status = 'failed'
-                await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: detail.status, detail } , dbTransaction)
+                await PpobTransactionRepository.updateByPaymentId(updatedPayment.id, { status: 'failed' } , dbTransaction)
             }
             
             await dbTransaction.commit()

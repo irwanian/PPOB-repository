@@ -10,7 +10,7 @@ module.exports = requestSnap = async (req, res) => {
     const dbTransaction = await Models.sequelize.transaction()
 
 try {
-        const { body } = req
+        const { body, session } = req
         const transaction = await PpobTransactionRepository.findOne({ id: body.transaction_id, status: 'pending' })
 
         const ppob_product = await PpobProductRepository.findOne({ id: transaction.ppob_product_id })
@@ -24,7 +24,7 @@ try {
         }
 
         try {
-            const orderId = PaymentService.getOrderId()
+            const orderId = PaymentService.getOrderId(session.slug.split('-')[1])
             const payload = {
                 transaction_details: {
                     gross_amount: transaction.selling_price,

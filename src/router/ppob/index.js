@@ -11,5 +11,6 @@ router.post('/transaction/inquiry-prepaid', [AuthMiddleware], method.inquiryPrep
 router.post('/transaction/inquiry-postpaid', [AuthMiddleware], method.inquiryPostpaid)
 router.post('/transaction/prepaid/request', [AuthMiddleware], method.requestPpobPrepaidTransaction)
 router.post('/transaction/postpaid/request', [AuthMiddleware], method.requestPpobPostpaidTransaction)
+router.post('/transaction/check-status', [AuthMiddleware], method.checkTransactionStatus)
 
 module.exports = router
