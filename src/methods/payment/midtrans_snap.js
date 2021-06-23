@@ -46,6 +46,7 @@ try {
                 payment_code: result.data.token,
                 nominal: ppob_product.selling_price,
                 payment_channel_id: 0,
+                paid_at: null,
                 status: 'pending',
                 expired_at: Moment().tz('Asia/Jakarta').add(24, 'hours').format('YYYY-MM-DD HH:mm:ss')
             }
