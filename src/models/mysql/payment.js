@@ -31,11 +31,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       expired_at: {
         type: DataTypes.STRING(30),
-        allowNull: false,
+        allowNull: true
       },
       paid_at: {
         type: DataTypes.STRING(30),
-        allowNull: false,
+        allowNull: true
       },
       payment_channel_id: {
         type: DataTypes.INTEGER,
