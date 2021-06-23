@@ -11,11 +11,16 @@ module.exports = inquiryPostpaid = async (req, res) => {
     try {
         const product = await PpobProductRepository.findOne({ id: product_id })
 
-        const inquiryPayload = qs.stringify({
+        let inquiryPayload = qs.stringify({
             ptype: product.code.split('-')[1],
             custid: destination_number,
             userid: process.env.NARINDO_POSTPAID_USER_ID
         })
+
+        if(inquiryPayload.toUpperCase().includes('%3A')) {
+            console.log('masup')
+            inquiryPayload = inquiryPayload.replace('%3A', ':')
+        }
 
         let inquiryResult = await ApiDependency.inquiryPostpaid(inquiryPayload)
         console.log(inquiryResult)
