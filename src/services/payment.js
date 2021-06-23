@@ -207,7 +207,7 @@ const mapResponsePayload = (data, product) => {
         } else {
             result.token = null
             result.kwh = null
-            result.serial_number = data.sn || null
+            result.sn = data.sn || null
             result.status = status
             result.message = data.message || null
         }
