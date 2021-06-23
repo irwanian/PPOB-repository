@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(30),
         allowNull: false,
       },
+      paid_at: {
+        type: DataTypes.STRING(30),
+        allowNull: false,
+      },
       payment_channel_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

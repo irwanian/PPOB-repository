@@ -225,7 +225,8 @@ const mapResponsePayload = (data, product) => {
 const updatePrepaidPaymentStatus = async (order_id, status, oldStatus, dbTransaction) => {
     const paymentUpdatePayload = {
         status,
-        expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:mm:ss')
+        expired_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:mm:ss'),
+        paid_at: moment().tz('Asia/jakarta').format('YYYY-MM-DD HH:mm:ss')
     }
     try {
         if (status !== 'pending') {
