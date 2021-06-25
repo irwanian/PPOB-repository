@@ -37,7 +37,7 @@ module.exports = inquiryPostpaid = async (req, res) => {
             timestamp: inquiryResult.timestamp || '',
             customer_name: inquiryResult.info1.name || '',
             amount: inquiryResult.info1.amount || 0,
-            fee: inquiryResult.info1.fee ? inquiryResult.info1.fee : inquiryResult.info1.admin || 0,
+            fee: product.selling_price
         }
 
         let payload = {};
