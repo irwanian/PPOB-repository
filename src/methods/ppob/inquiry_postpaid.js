@@ -38,7 +38,6 @@ module.exports = inquiryPostpaid = async (req, res) => {
             customer_name: inquiryResult.info1.name || '',
             amount: inquiryResult.info1.amount || 0,
             fee: product.selling_price,
-            product_id: product.id
         }
 
         let payload = {};
@@ -49,7 +48,7 @@ module.exports = inquiryPostpaid = async (req, res) => {
             payload = createInquiryPayload
         }
 
-        return res.success({ payload })
+        return res.success({ ...payload, product_id: product.id })
     } catch (error) {
         console.log(error)
         return res.error(error)
