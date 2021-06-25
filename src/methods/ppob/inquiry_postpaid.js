@@ -48,7 +48,9 @@ module.exports = inquiryPostpaid = async (req, res) => {
             payload = createInquiryPayload
         }
 
-        return res.success({ payload: { ...payload, product_id: product.id } })
+        payload.product_id = product_id
+
+        return res.success({ payload })
     } catch (error) {
         console.log(error)
         return res.error(error)
