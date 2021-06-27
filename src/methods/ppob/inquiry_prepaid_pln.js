@@ -18,7 +18,7 @@ module.exports = inquiryPrepaidPln = async (req, res) => {
         console.log(inquiryResult)
         if (!inquiryResult.status) {
             return res.error({ message: inquiryResult.message })
-        } else if (inquiryResult.data.status !== 1) {
+        } else if (![1, 0].includes(inquiryResult.data.status)) {
             return res.error({ message: 'Inquiry Error' })
         }
 
