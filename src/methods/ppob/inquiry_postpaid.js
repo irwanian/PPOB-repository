@@ -24,7 +24,9 @@ module.exports = inquiryPostpaid = async (req, res) => {
 
         let inquiryResult = await ApiDependency.inquiryPostpaid(inquiryPayload)
         console.log(inquiryResult)
-        if (!inquiryResult.status || inquiryResult.data.status !== 1) {
+        if (!inquiryResult.status) {
+            return res.error({ message: inquiryResult.message })
+        } else if (inquiryResult.data.status !== 1) {
             return res.error({ message: 'Inquiry Error' })
         }
 
