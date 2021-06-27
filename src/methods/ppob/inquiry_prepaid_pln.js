@@ -15,8 +15,8 @@ module.exports = inquiryPrepaidPln = async (req, res) => {
         })
 
         let inquiryResult = await ApiDependency.inquiryPrepaidPln(inquiryPayload)
-        if (!inquiryResult.status) {
-            return res.error({ message: inquiryResult.message })
+        if (!inquiryResult.status || inquiryResult.data.status !== 1) {
+            return res.error({ message: inquiryResult.data ? inquiryResult.data.message : inquiryResult.message })
         }
 
         inquiryResult = Helpers.parseDataObject(inquiryResult.data)
