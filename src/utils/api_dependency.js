@@ -39,7 +39,7 @@ module.exports.testPrepaidPpobProduct = async (params, endpoint) => {
         data: {}
     }
     const url = `${process.env.NARINDO_PREPAID_URL}/v3/${endpoint}`
-    
+    console.log(url)
     try {
         const headers = {
             headers: {
@@ -50,7 +50,7 @@ module.exports.testPrepaidPpobProduct = async (params, endpoint) => {
 
         const narindoResponse = await axios.post(url, params, headers)
         result.data = narindoResponse.data
-
+        
         return result
     } catch (error) {
         console.log(error)
