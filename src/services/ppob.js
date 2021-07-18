@@ -1,9 +1,11 @@
 const moment = require('moment-timezone')
 const qs = require('qs')
 const crypto = require('crypto')
+const fs = require('fs');
 const ApiDependency = require('../utils/api_dependency')
 const PpobRepository = require('../repositories/ppob')
 const { NARINDO_POSTPAID_PASSWORD, NARINDO_POSTPAID_USER_ID, NARINDO_PREPAID_USER_ID, NARINDO_PREPAID_PASSWORD } = process.env
+const test_file = require('../../test_case.json')
 
 const setProviderName = (code) => {
     let provider
