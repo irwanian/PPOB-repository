@@ -6,5 +6,6 @@ module.exports ={
     inquiryPrepaidPln: require('./inquiry_prepaid_pln'),
     inquiryPostpaid: require('./inquiry_postpaid'),
     getPdamList: require('./list_pdam'),
-    checkTransactionStatus: require('./check_transaction_status')
+    checkTransactionStatus: require('./check_transaction_status'),
+    testTransactionAdvice: require('./test_transaction_advice')
 } 
