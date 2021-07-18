@@ -1,11 +1,9 @@
 const moment = require('moment-timezone')
 const qs = require('qs')
 const crypto = require('crypto')
-const fs = require('fs')
 const ApiDependency = require('../utils/api_dependency')
 const PpobRepository = require('../repositories/ppob')
 const { NARINDO_POSTPAID_PASSWORD, NARINDO_POSTPAID_USER_ID, NARINDO_PREPAID_USER_ID, NARINDO_PREPAID_PASSWORD } = process.env
-const test_file = require('../../test_case.json')
 
 const setProviderName = (code) => {
     let provider
@@ -130,18 +128,59 @@ const processPrepaidTransaction = async (params) => {
 
     const result = await ApiDependency.buyPrepaidPpobProduct(queryParams)
     console.log(result.data)
-    const existing = await fs.readFile(test_file, 'utf8')
-    await fs.writeFile(test_file, { ...existing, request: queryParams, response: result.data }, 'utf8' )
 
     return { ...result.data, reqid: reqId }
 }
 
 
+const testPrepaidTransaction = async (params, endpoint) => {
+    const reqId = setReqId()
+    const sign = setTransactionSign(params, reqId, 'prepaid')
+    const queryParams = qs.stringify({ 
+        reqid: reqId,
+        msisdn: params.msisdn,
+        product: params.product_code,
+        userid: NARINDO_PREPAID_USER_ID,
+        sign
+    })
+
+    const result = await ApiDependency.testPrepaidPpobProduct(queryParams, endpoint)
+    console.log(result.data)
+    const existing = await fs.readFile(test_file, 'utf8')
+    await fs.writeFile(test_file, { ...existing, request: queryParams, response: result.data }, 'utf8' )
+
+
+    return { ...result.data, reqid: reqId }
+}
+
+const processPostpaidTransaction = async (params) => {
+    const reqId = setReqId()
+    const sign = setTransactionSign(params, reqId, 'postpaid')
+    let queryParams = qs.stringify({ 
+        reqid: reqId,
+        timestamp: params.timestamp,
+        custid: params.custid,
+        ptype: params.ptype,
+        userid: NARINDO_POSTPAID_USER_ID,
+        sign
+    })
+
+    if(queryParams.toUpperCase().includes('%3A')) {
+        console.log('masup')
+        queryParams = queryParams.replace('%3A', ':')
+    }
+
+    console.log(queryParams)
+
+    const result = await ApiDependency.buyPostpaidPpobProduct(queryParams)
+    console.log(result.data)
+
+    return {...result.data, reqid: reqId }
+}
 
 module.exports = {
     insertProducts,
     processPrepaidTransaction,
     processPostpaidTransaction,
-    testPrepaidAdvice,
     testPrepaidTransaction
 }
