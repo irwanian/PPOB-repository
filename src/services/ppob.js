@@ -144,6 +144,8 @@ const testPrepaidTransaction = async (params, endpoint) => {
         sign
     })
 
+    console.log(queryParams, endpoint)
+
     const result = await ApiDependency.testPrepaidPpobProduct(queryParams, endpoint)
     console.log(result.data)
     const existing = await fs.readFile(test_file, 'utf8')
