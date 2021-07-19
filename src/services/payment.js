@@ -182,7 +182,8 @@ const mapResponsePayload = (data, product) => {
         kwh: null,
         sn: null,
         status: null,
-        message: null
+        message: null,
+        code: data.status
     }
 
     if (data.status === 1) {

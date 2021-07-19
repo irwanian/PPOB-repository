@@ -2,7 +2,6 @@ const PpobRepository = require('../../repositories/ppob')
 const PpobTransactionRepository = require('../../repositories/ppob_transaction')
 const Helpers = require('../../utils/helpers')
 const PpobService = require('../../services/ppob')
-const { request } = require('express')
 
 module.exports = testPpobPrepaid = async (req, res) => {
     const { product_id, msisdn } = req.body
