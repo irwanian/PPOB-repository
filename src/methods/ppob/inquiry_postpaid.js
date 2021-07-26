@@ -14,7 +14,7 @@ module.exports = inquiryPostpaid = async (req, res) => {
         let inquiryPayload = qs.stringify({
             ptype: product.code.split('-')[1],
             custid: destination_number,
-            userid: process.env.NARINDO_POSTPAID_USER_ID
+            userid: process.env.NPOI
         })
 
         if(inquiryPayload.toUpperCase().includes('%3A')) {

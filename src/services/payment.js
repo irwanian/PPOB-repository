@@ -171,7 +171,7 @@ const chargePayment = async (payment_channel, ppob) => {
 const getMidtransSignatureKey = (params) => {
     return crypto
             .createHash('sha512')
-            .update(params.order_id+params.status_code+params.gross_amount+process.env.MIDTRANS_SERVER_KEY)
+            .update(params.order_id+params.status_code+params.gross_amount+process.env.MTSK)
             .digest('hex')
 }
 

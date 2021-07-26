@@ -11,7 +11,7 @@ module.exports = inquiryPrepaidPln = async (req, res) => {
         const inquiryPayload = qs.stringify({
             ptype: 'pln',
             custid: destination_number,
-            userid: process.env.NARINDO_PREPAID_USER_ID
+            userid: process.env.NPRI
         })
 
         let inquiryResult = await ApiDependency.inquiryPrepaidPln(inquiryPayload)

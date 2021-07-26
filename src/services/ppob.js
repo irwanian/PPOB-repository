@@ -3,7 +3,7 @@ const qs = require('qs')
 const crypto = require('crypto')
 const ApiDependency = require('../utils/api_dependency')
 const PpobRepository = require('../repositories/ppob')
-const { NARINDO_POSTPAID_PASSWORD, NARINDO_POSTPAID_USER_ID, NARINDO_PREPAID_USER_ID, NARINDO_PREPAID_PASSWORD } = process.env
+const { NPOP, NPOI, NPRI, NPPI } = process.env
 
 const setProviderName = (code) => {
     let provider
@@ -100,14 +100,14 @@ const setTransactionSign = (params, reqId, type) => {
     if (type === 'prepaid') {
         sign = crypto
                     .createHash('sha1')
-                    .update(reqId + msisdn + product_code + NARINDO_PREPAID_USER_ID + NARINDO_PREPAID_PASSWORD)
+                    .update(reqId + msisdn + product_code + NPRI + NPPI)
                     .digest('hex')
                     .toUpperCase()
         return sign
     }  else if (type === 'postpaid') {
         sign = crypto
                     .createHash('sha1')
-                    .update(reqId + timestamp + custid + ptype + NARINDO_POSTPAID_USER_ID + NARINDO_POSTPAID_PASSWORD)
+                    .update(reqId + timestamp + custid + ptype + NPOI + NPOP)
                     .digest('hex')
                     .toUpperCase()
     }
@@ -122,7 +122,7 @@ const processPrepaidTransaction = async (params) => {
         reqid: reqId,
         msisdn: params.msisdn,
         product: params.product_code,
-        userid: NARINDO_PREPAID_USER_ID,
+        userid: NPRI,
         sign
     })
 
@@ -140,7 +140,7 @@ const testPrepaidTransaction = async (params, endpoint) => {
         reqid: reqId,
         msisdn: params.msisdn,
         product: params.product_code,
-        userid: NARINDO_PREPAID_USER_ID,
+        userid: NPRI,
         sign
     })
 
@@ -160,7 +160,7 @@ const processPostpaidTransaction = async (params) => {
         timestamp: params.timestamp,
         custid: params.custid,
         ptype: params.ptype,
-        userid: NARINDO_POSTPAID_USER_ID,
+        userid: NPOI,
         sign
     })
 

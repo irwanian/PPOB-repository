@@ -18,7 +18,7 @@ module.exports = checkTransactionStatus = async (req, res) => {
         product = Helpers.parseDataObject(product)
 
         const transactionPayload = {
-            userid: product.plan.toLowerCase() === 'prepaid' ? process.env.NARINDO_PREPAID_USER_ID : process.env.NARINDO_POSTPAID_USER_ID,
+            userid: product.plan.toLowerCase() === 'prepaid' ? process.env.NPRI : process.env.NPOI,
             reqid: transaction.detail.reqid,
         }
 

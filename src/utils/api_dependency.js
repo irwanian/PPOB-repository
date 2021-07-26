@@ -8,7 +8,7 @@ module.exports.buyPrepaidPpobProduct = async (params) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_PREPAID_URL}/v3/h2h`
+    const url = `${process.env.NPRU}/v3/h2h`
     
     try {
         const headers = {
@@ -38,7 +38,7 @@ module.exports.testPrepaidPpobProduct = async (params, endpoint) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_PREPAID_URL}/v3/${endpoint}`
+    const url = `${process.env.NPRU}/v3/${endpoint}`
     console.log(url)
     try {
         const headers = {
@@ -68,7 +68,7 @@ module.exports.buyPostpaidPpobProduct = async (payload) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_POSTPAID_URL}/url/payment`
+    const url = `${process.env.NPOU}/url/payment`
     
     try {
         const headers = {
@@ -98,7 +98,7 @@ module.exports.checkStatusPostpaidPpobProduct = async (payload) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_POSTPAID_URL}/url/advice`
+    const url = `${process.env.NPOU}/url/advice`
     
     try {
         const headers = {
@@ -128,7 +128,7 @@ module.exports.checkStatusPrepaidPpobProduct = async (payload) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_PREPAID_URL}/url/advice`
+    const url = `${process.env.NPRU}/url/advice`
     
     try {
         const headers = {
@@ -158,7 +158,7 @@ module.exports.inquiryPostpaid = async (payload) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_POSTPAID_URL}/url/inquiry`
+    const url = `${process.env.NPOU}/url/inquiry`
     
     try {
         const headers = {
@@ -188,7 +188,7 @@ module.exports.inquiryPrepaidPln = async (params) => {
         message: '',
         data: {}
     }
-    const url = `${process.env.NARINDO_PREPAID_URL}/v3/inquiry`
+    const url = `${process.env.NPRU}/v3/inquiry`
     
     try {
         const headers = {
@@ -220,8 +220,8 @@ module.exports.chargeMidtransPayment = async (payload) => {
     }
     try {
 
-        const midtransAuth = Buffer.from(process.env.MIDTRANS_SERVER_KEY + ':').toString('base64')
-        const url = `${process.env.MIDTRANS_API}/v2/charge`
+        const midtransAuth = Buffer.from(process.env.MTSK + ':').toString('base64')
+        const url = `${process.env.MTA}/v2/charge`
         const headers = {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -259,8 +259,8 @@ module.exports.requestMidtransSnap = async (payload) => {
     }
     try {
 
-        const midtransAuth = Buffer.from(process.env.MIDTRANS_SERVER_KEY + ':').toString('base64')
-        const url = `${process.env.MIDTRANS_SNAP_API}/v1/transactions`
+        const midtransAuth = Buffer.from(process.env.MTSK + ':').toString('base64')
+        const url = `${process.env.MTS}/v1/transactions`
         const headers = {
             headers: {
                 'Content-Type': 'application/json',
