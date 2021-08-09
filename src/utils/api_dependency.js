@@ -168,8 +168,10 @@ module.exports.inquiryPostpaid = async (payload) => {
             }
         }
 
+        console.log(payload)
         const narindoResponse = await axios.post(url, payload, headers)
         result.data = narindoResponse.data
+        console.log(result)
 
         return result
     } catch (error) {

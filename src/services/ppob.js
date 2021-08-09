@@ -50,15 +50,18 @@ const mapPpobProducts = (products, vendor) => {
         const selling_price = purchase_price + 500
         const vendorCode = setVendorCode(vendor)
         let category
+        const postpaids = ['pln', 'pdam', 'bpjs', 'tsel', '']
+        let plan = 'postpaid'
+
+        if (!postpaids.includes(product[' Product Code'])) {
+            plan = 'prepaid'
+        }
 
         if (product['Category'] && (product['Category'].toLowerCase().includes('reguler') || product['Category'].toLowerCase().includes('regular'))) {
             category = 'Reguler'
         } else if (product['Product Name'].toLowerCase().includes('regular') || product['Product Name'].toLowerCase().includes('reguler')) {
             category = 'Reguler'
-        } else if (!product['Category']) {
-            category = product['Product Name'].split(' ')[0]
-        } 
-        else {
+        } else {
             category = 'Data'
         }
 
@@ -70,6 +73,7 @@ const mapPpobProducts = (products, vendor) => {
             description: product['Description'],
             purchase_price,
             selling_price,
+            plan,
             category,
             is_active: 1,
             provider: setProviderName(product['Product Code'])
@@ -81,6 +85,7 @@ const mapPpobProducts = (products, vendor) => {
 const insertProducts = async (products, vendor) => {
     try {
         const mappedProducts = mapPpobProducts(products, vendor)
+        console.log(mappedProducts)
 
         return await PpobRepository.bulkInsert(mappedProducts)
     } catch (error) {
