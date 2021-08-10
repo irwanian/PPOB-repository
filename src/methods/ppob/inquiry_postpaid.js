@@ -12,9 +12,9 @@ module.exports = inquiryPostpaid = async (req, res) => {
         const product = await PpobProductRepository.findOne({ id: product_id })
 
         let inquiryPayload = qs.stringify({
+            userid: process.env.NARINDO_POSTPAID_USER_ID,
             ptype: product.code.split('-')[1],
-            custid: destination_number,
-            userid: process.env.NARINDO_POSTPAID_USER_ID
+            custid: destination_number
         })
 
         if(inquiryPayload.toUpperCase().includes('%3A')) {
