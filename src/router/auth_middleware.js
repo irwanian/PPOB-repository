@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
     try {
         let userData
         console.time('how long to get User detail')
-        userData = await axios.get(`https://kartunet.id/api/user/${req.body.user_id ? req.body.user_id : req.params.id}`, {
+        userData = await axios.get(`${process.env.API_URL}/${req.body.user_id ? req.body.user_id : req.params.id}`, {
             headers: {
                 Accept: 'application/json',
                 Authorization: token
@@ -32,7 +32,6 @@ module.exports = async (req, res, next) => {
 
         next()
     } catch (error) {
-        console.log(error)
         return res.error({ message: error.response ? error.response.data.message : error.message, code: error.response.status || 500 })        
     }
 }
